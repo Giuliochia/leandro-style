@@ -145,12 +145,13 @@ export async function calcolaGiorniBlocchi(operatoreId, durataMinuti, da, a) {
     caricaEccezioniApertura(),
   ])
 
-  const resOrari = await databases.listDocuments(DB_ID, COLLECTIONS.ORARI_LAVORO, [
+  const resOrariRaw = await databases.listDocuments(DB_ID, COLLECTIONS.ORARI_LAVORO, [
     Query.equal('operatore_id', operatoreId),
-    Query.equal('attivo', true),
-    Query.limit(20),
+    Query.limit(50),
   ])
+  const resOrari = { documents: resOrariRaw.documents.filter(o => o.attivo !== false) }
   const giorniLavorativi = new Set(resOrari.documents.map(o => o.giorno_settimana))
+  console.debug('[blocchi] giorniLavorativi:', [...giorniLavorativi], 'giorniChiusi:', [...giorniChiusi])
 
   const resBlocchiAll = await databases.listDocuments(DB_ID, COLLECTIONS.BLOCCHI, [
     Query.lessThanEqual('data_ora_inizio', formatISO(endOfDay(a))),
@@ -215,12 +216,12 @@ export async function calcolaGiorniDisponibili(operatoreId, durataMinuti, da, a)
   ])
   console.debug('[disponibilita] giorniChiusi:', [...giorniChiusi], 'operatoreId:', operatoreId)
 
-  // Carica orari di lavoro una volta sola
-  const resOrari = await databases.listDocuments(DB_ID, COLLECTIONS.ORARI_LAVORO, [
+  // Carica orari di lavoro una volta sola (filtro attivo lato client per evitare dipendenza da index)
+  const resOrariRaw = await databases.listDocuments(DB_ID, COLLECTIONS.ORARI_LAVORO, [
     Query.equal('operatore_id', operatoreId),
-    Query.equal('attivo', true),
-    Query.limit(20),
+    Query.limit(50),
   ])
+  const resOrari = { documents: resOrariRaw.documents.filter(o => o.attivo !== false) }
   const giorniLavorativi = new Set(resOrari.documents.map(o => o.giorno_settimana))
   console.debug('[disponibilita] orari trovati:', resOrari.documents.length, 'giorniLavorativi:', [...giorniLavorativi])
 
@@ -239,13 +240,18 @@ export async function calcolaGiorniDisponibili(operatoreId, durataMinuti, da, a)
   console.debug('[disponibilita] blocchi (no ricorrenti):', resBlocchi.documents.length)
 
   // Appuntamenti nel range
-  const resApp = await databases.listDocuments(DB_ID, COLLECTIONS.APPUNTAMENTI, [
-    Query.equal('operatore_id', operatoreId),
-    Query.greaterThanEqual('data_ora_inizio', formatISO(startOfDay(da))),
-    Query.lessThanEqual('data_ora_inizio', formatISO(endOfDay(a))),
-    Query.notEqual('stato', 'annullato'),
-    Query.limit(500),
-  ])
+  let resApp = { documents: [] }
+  try {
+    resApp = await databases.listDocuments(DB_ID, COLLECTIONS.APPUNTAMENTI, [
+      Query.equal('operatore_id', operatoreId),
+      Query.greaterThanEqual('data_ora_inizio', formatISO(startOfDay(da))),
+      Query.lessThanEqual('data_ora_inizio', formatISO(endOfDay(a))),
+      Query.notEqual('stato', 'annullato'),
+      Query.limit(500),
+    ])
+  } catch (e) {
+    console.error('[disponibilita] errore query appuntamenti:', e)
+  }
 
   const now = new Date()
   const disponibili = []
