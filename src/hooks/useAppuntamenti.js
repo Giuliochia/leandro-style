@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { databases } from '../appwrite/client'
 import { DB_ID, COLLECTIONS } from '../appwrite/config'
-import { ID, Query, Permission, Role } from 'appwrite'
+import { ID, Query } from 'appwrite'
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, formatISO } from 'date-fns'
 import { logError } from '../lib/logger'
 
@@ -196,16 +196,6 @@ export async function creaAppuntamento({
   const promemoriaSafe = PROMEMORIA_WHITELIST.includes(Number(promemoria)) ? Number(promemoria) : 60
   const now = new Date().toISOString()
 
-  const permissions = [
-    Permission.read(Role.team('admin')),
-    Permission.update(Role.team('admin')),
-    Permission.delete(Role.team('admin')),
-    ...(accountId ? [
-      Permission.read(Role.user(accountId)),
-      Permission.update(Role.user(accountId)),
-    ] : []),
-  ]
-
   // slot_key garantisce unicità a livello DB tramite l'index UNIQUE su Appwrite.
   // Se due richieste arrivano contemporaneamente per lo stesso slot,
   // Appwrite rifiuta la seconda con HTTP 409 — il DB diventa il lock.
@@ -226,7 +216,7 @@ export async function creaAppuntamento({
       cliente_nome: clienteNome || '',
       servizi_nomi: (Array.isArray(serviziNomi) ? serviziNomi : []).join(', '),
       slot_key: slotKey,
-    }, permissions)
+    })
   } catch (e) {
     // 409 = slot già occupato (index UNIQUE violato) — messaggio user-friendly
     if (e?.code === 409) {
