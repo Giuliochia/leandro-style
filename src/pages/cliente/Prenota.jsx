@@ -147,7 +147,7 @@ export default function Prenota() {
       navigate('/appuntamenti')
     } catch (e) {
       confermaInCorso.current = false
-      dispatch({ type: 'SET_ERRORE', msg: 'Errore durante la prenotazione. Riprova.' })
+      dispatch({ type: 'SET_ERRORE', msg: e.message || 'Errore durante la prenotazione. Riprova.' })
       dispatch({ type: 'SET_SAVING', value: false })
     }
   }
