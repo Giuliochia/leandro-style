@@ -41,7 +41,7 @@ export default function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/verifica-email" element={<VerificaEmail />} />
           <Route path="/oauth-callback" element={<OAuthCallback />} />
-          <Route path="/completa-profilo" element={<RequireAuth><CompletaProfilo /></RequireAuth>} />
+          <Route path="/completa-profilo" element={<RequireCliente><CompletaProfilo /></RequireCliente>} />
 
           {/* Area admin */}
           <Route path="/admin" element={<RequireAdmin><AdminLayout /></RequireAdmin>}>
