@@ -20,18 +20,19 @@ async function caricaEccezioniApertura() {
   }
 }
 
-// Carica i giorni di chiusura ricorrenti
-async function caricaGiorniChiusi() {
+// Carica i giorni di chiusura ricorrenti per un operatore (globali + specifici)
+async function caricaGiorniChiusi(operatoreId) {
+  const appartiene = (b) => !b.operatore_id || b.tutto_salone === true || b.operatore_id === operatoreId
   try {
     const res = await databases.listDocuments(DB_ID, COLLECTIONS.BLOCCHI, [
       Query.equal('ricorrente', true),
-      Query.limit(7),
+      Query.limit(50),
     ])
-    return new Set(res.documents.map(b => b.giorno_settimana))
+    return new Set(res.documents.filter(appartiene).map(b => b.giorno_settimana))
   } catch {
     // Se ricorrente non è indicizzato, carica tutto e filtra lato client
     const res = await databases.listDocuments(DB_ID, COLLECTIONS.BLOCCHI, [Query.limit(200)])
-    return new Set(res.documents.filter(b => b.ricorrente).map(b => b.giorno_settimana))
+    return new Set(res.documents.filter(b => b.ricorrente && appartiene(b)).map(b => b.giorno_settimana))
   }
 }
 
@@ -40,7 +41,7 @@ export async function calcolaSlotDisponibili(operatoreId, data, durataMinuti) {
   const giornoSettimana = getDay(data) // 0=Dom
 
   const [giorniChiusi, eccezioniApertura] = await Promise.all([
-    caricaGiorniChiusi(),
+    caricaGiorniChiusi(operatoreId),
     caricaEccezioniApertura(),
   ])
   const key = dataKey(data)
@@ -76,7 +77,7 @@ export async function calcolaSlotDisponibili(operatoreId, data, durataMinuti) {
   ])
   const resBlocchi = {
     documents: resBlocchiRaw.documents.filter(b =>
-      b.operatore_id === operatoreId || b.tutto_salone === true || !b.operatore_id
+      !b.ricorrente && (b.operatore_id === operatoreId || b.tutto_salone === true || !b.operatore_id)
     )
   }
 
@@ -140,7 +141,7 @@ export async function calcolaSlotDisponibili(operatoreId, data, durataMinuti) {
 // Ritorna i giorni bloccati (ferie/chiusure che coprono l'intero giorno lavorativo) nel range [da, a]
 export async function calcolaGiorniBlocchi(operatoreId, durataMinuti, da, a) {
   const [giorniChiusi, eccezioniApertura] = await Promise.all([
-    caricaGiorniChiusi(),
+    caricaGiorniChiusi(operatoreId),
     caricaEccezioniApertura(),
   ])
 
@@ -158,7 +159,7 @@ export async function calcolaGiorniBlocchi(operatoreId, durataMinuti, da, a) {
   ])
   // Filtra lato client: blocchi per questo operatore o per tutto il salone
   const tuttiBlocchi = resBlocchiAll.documents.filter(b =>
-    b.operatore_id === operatoreId || b.tutto_salone === true || !b.operatore_id
+    !b.ricorrente && (b.operatore_id === operatoreId || b.tutto_salone === true || !b.operatore_id)
   )
 
   const bloccati = []
@@ -209,9 +210,10 @@ export async function calcolaGiorniBlocchi(operatoreId, durataMinuti, da, a) {
 // Ritorna i giorni disponibili (hanno almeno 1 slot) nel range [da, a]
 export async function calcolaGiorniDisponibili(operatoreId, durataMinuti, da, a) {
   const [giorniChiusi, eccezioniApertura] = await Promise.all([
-    caricaGiorniChiusi(),
+    caricaGiorniChiusi(operatoreId),
     caricaEccezioniApertura(),
   ])
+  console.debug('[disponibilita] giorniChiusi:', [...giorniChiusi], 'operatoreId:', operatoreId)
 
   // Carica orari di lavoro una volta sola
   const resOrari = await databases.listDocuments(DB_ID, COLLECTIONS.ORARI_LAVORO, [
@@ -220,6 +222,7 @@ export async function calcolaGiorniDisponibili(operatoreId, durataMinuti, da, a)
     Query.limit(20),
   ])
   const giorniLavorativi = new Set(resOrari.documents.map(o => o.giorno_settimana))
+  console.debug('[disponibilita] orari trovati:', resOrari.documents.length, 'giorniLavorativi:', [...giorniLavorativi])
 
   // Blocchi nel range (filtro lato client per operatore o tutto il salone)
   const resBlocchiRaw = await databases.listDocuments(DB_ID, COLLECTIONS.BLOCCHI, [
@@ -229,9 +232,11 @@ export async function calcolaGiorniDisponibili(operatoreId, durataMinuti, da, a)
   ])
   const resBlocchi = {
     documents: resBlocchiRaw.documents.filter(b =>
-      b.operatore_id === operatoreId || b.tutto_salone === true || !b.operatore_id
+      !b.ricorrente && (b.operatore_id === operatoreId || b.tutto_salone === true || !b.operatore_id)
     )
   }
+
+  console.debug('[disponibilita] blocchi (no ricorrenti):', resBlocchi.documents.length)
 
   // Appuntamenti nel range
   const resApp = await databases.listDocuments(DB_ID, COLLECTIONS.APPUNTAMENTI, [
