@@ -1,0 +1,26 @@
+{
+  "projectId": "6a0dd6480009eab863f9",
+  "projectName": "Leandro Style",
+  "functions": [
+    {
+      "name": "Promemoria Push",
+      "$id": "promemoria-push",
+      "path": "functions/promemoria-push",
+      "entrypoint": "src/main.js",
+      "ignore": ["node_modules"],
+      "runtime": "node-22.0",
+      "scopes": [],
+      "variables": {}
+    },
+    {
+      "name": "Notifica Admin",
+      "$id": "notifica-admin",
+      "path": "functions/notifica-admin",
+      "entrypoint": "src/main.js",
+      "ignore": ["node_modules"],
+      "runtime": "node-22.0",
+      "scopes": [],
+      "variables": {}
+    }
+  ]
+}

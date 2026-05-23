@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\giuli\\\\Desktop\\\\Progetti\\\\leandro-style-master\" -Force | Select-Object Name, @{Name=\"Type\";Expression={if\\($_.PSIsContainer\\) {\"DIR\"} else {\"FILE\"}}} | Sort-Object Type, Name)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(Remove-Item -Recurse -Force \"c:\\\\Users\\\\giuli\\\\Desktop\\\\Progetti\\\\leandro-style-master\\\\functions\\\\annulla-appuntamento\")",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git add *)"
+    ]
+  }
+}
