@@ -151,7 +151,7 @@ export async function calcolaGiorniBlocchi(operatoreId, durataMinuti, da, a) {
   ])
   const resOrari = { documents: resOrariRaw.documents.filter(o => o.attivo !== false) }
   const giorniLavorativi = new Set(resOrari.documents.map(o => o.giorno_settimana))
-  console.debug('[blocchi] giorniLavorativi:', [...giorniLavorativi], 'giorniChiusi:', [...giorniChiusi])
+  console.log('[blocchi] giorniLavorativi:', [...giorniLavorativi], 'giorniChiusi:', [...giorniChiusi])
 
   const resBlocchiAll = await databases.listDocuments(DB_ID, COLLECTIONS.BLOCCHI, [
     Query.lessThanEqual('data_ora_inizio', formatISO(endOfDay(a))),
@@ -214,7 +214,7 @@ export async function calcolaGiorniDisponibili(operatoreId, durataMinuti, da, a)
     caricaGiorniChiusi(operatoreId),
     caricaEccezioniApertura(),
   ])
-  console.debug('[disponibilita] giorniChiusi:', [...giorniChiusi], 'operatoreId:', operatoreId)
+  console.log('[disponibilita] giorniChiusi:', [...giorniChiusi], 'operatoreId:', operatoreId)
 
   // Carica orari di lavoro una volta sola (filtro attivo lato client per evitare dipendenza da index)
   const resOrariRaw = await databases.listDocuments(DB_ID, COLLECTIONS.ORARI_LAVORO, [
@@ -223,7 +223,7 @@ export async function calcolaGiorniDisponibili(operatoreId, durataMinuti, da, a)
   ])
   const resOrari = { documents: resOrariRaw.documents.filter(o => o.attivo !== false) }
   const giorniLavorativi = new Set(resOrari.documents.map(o => o.giorno_settimana))
-  console.debug('[disponibilita] orari trovati:', resOrari.documents.length, 'giorniLavorativi:', [...giorniLavorativi])
+  console.log('[disponibilita] orari trovati:', resOrari.documents.length, 'giorniLavorativi:', [...giorniLavorativi])
 
   // Blocchi nel range (filtro lato client per operatore o tutto il salone)
   const resBlocchiRaw = await databases.listDocuments(DB_ID, COLLECTIONS.BLOCCHI, [
@@ -237,7 +237,7 @@ export async function calcolaGiorniDisponibili(operatoreId, durataMinuti, da, a)
     )
   }
 
-  console.debug('[disponibilita] blocchi (no ricorrenti):', resBlocchi.documents.length)
+  console.log('[disponibilita] blocchi (no ricorrenti):', resBlocchi.documents.length)
 
   // Appuntamenti nel range
   let resApp = { documents: [] }
