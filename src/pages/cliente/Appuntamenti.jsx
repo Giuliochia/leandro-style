@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { databases } from '../../appwrite/client'
 import { DB_ID, COLLECTIONS } from '../../appwrite/config'
 import { Query } from 'appwrite'
@@ -14,7 +14,6 @@ export default function MieiAppuntamenti() {
   const navigate = useClienteNav()
   const [clienteId, setClienteId] = useState(null)
   const [appuntamenti, setAppuntamenti] = useState([])
-  const [nomiServizi, setNomiServizi] = useState({})
   const [loading, setLoading] = useState(true)
   const [confirmAnnulla, setConfirmAnnulla] = useState(null)
   const [motivoAnnullo, setMotivoAnnullo] = useState('')
@@ -39,20 +38,8 @@ export default function MieiAppuntamenti() {
       Query.equal('cliente_id', clienteId),
       Query.orderDesc('data_ora_inizio'),
       Query.limit(100),
-    ]).then(async res => {
+    ]).then(res => {
       setAppuntamenti(res.documents)
-      const map = {}
-      await Promise.all(res.documents.map(async a => {
-        const s = await databases.listDocuments(DB_ID, COLLECTIONS.APPUNTAMENTO_SERVIZI, [
-          Query.equal('appuntamento_id', a.$id),
-          Query.limit(10),
-        ])
-        const nomi = await Promise.all(s.documents.map(d =>
-          databases.getDocument(DB_ID, COLLECTIONS.SERVIZI, d.servizio_id).then(d => d.nome).catch(() => '')
-        ))
-        map[a.$id] = nomi.filter(Boolean)
-      }))
-      setNomiServizi(map)
     }).catch(e => setErrore(e.message))
       .finally(() => setLoading(false))
   }, [clienteId])
@@ -71,6 +58,7 @@ export default function MieiAppuntamenti() {
     try {
       await databases.updateDocument(DB_ID, COLLECTIONS.APPUNTAMENTI, confirmAnnulla, {
         stato: 'annullato',
+        slot_key: null,
         ...(motivoAnnullo.trim() ? { note: motivoAnnullo.trim().slice(0, 500) } : {}),
       })
       setAppuntamenti(prev => prev.map(a => a.$id === confirmAnnulla ? { ...a, stato: 'annullato' } : a))
@@ -119,7 +107,7 @@ export default function MieiAppuntamenti() {
               <h2 className="app-section__title">In arrivo</h2>
               <div className="app-list">
                 {prossimi.map((a, i) => (
-                  <AppCard key={a.$id} app={a} servizi={nomiServizi[a.$id]} index={i}
+                  <AppCard key={a.$id} app={a} index={i}
                     onAnnulla={puoAnnullare(a) ? () => setConfirmAnnulla(a.$id) : null}
                     troppoTardi={a.stato === 'prenotato' && !puoAnnullare(a)} />
                 ))}
@@ -135,7 +123,7 @@ export default function MieiAppuntamenti() {
               {mostraStorico && (
                 <div className="app-list mt-2">
                   {passati.map((a, i) => (
-                    <AppCard key={a.$id} app={a} servizi={nomiServizi[a.$id]} index={i} />
+                    <AppCard key={a.$id} app={a} index={i} />
                   ))}
                 </div>
               )}
@@ -177,7 +165,8 @@ export default function MieiAppuntamenti() {
   )
 }
 
-function AppCard({ app, servizi, onAnnulla, troppoTardi = false, index = 0 }) {
+function AppCard({ app, onAnnulla, troppoTardi = false, index = 0 }) {
+  const servizi = app.servizi_nomi ? app.servizi_nomi.split(', ') : []
   const dataOra = new Date(app.data_ora_inizio)
   const isProssimo = app.stato === 'prenotato' && !isBefore(dataOra, new Date())
 

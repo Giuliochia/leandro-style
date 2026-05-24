@@ -51,14 +51,7 @@ export default function ClienteDashboard() {
       if (apps.documents.length) {
         const app = apps.documents[0]
         setProssimo(app)
-        const s = await databases.listDocuments(DB_ID, COLLECTIONS.APPUNTAMENTO_SERVIZI, [
-          Query.equal('appuntamento_id', app.$id),
-          Query.limit(10),
-        ])
-        const nomi = await Promise.all(s.documents.map(d =>
-          databases.getDocument(DB_ID, COLLECTIONS.SERVIZI, d.servizio_id).then(d => d.nome).catch(() => '')
-        ))
-        setServiziProssimo(nomi.filter(Boolean))
+        setServiziProssimo(app.servizi_nomi ? app.servizi_nomi.split(', ') : [])
       }
     }).catch(e => logError('Dashboard/loadProssimoAppuntamento', e, { userId: user?.$id }))
       .finally(() => setLoading(false))

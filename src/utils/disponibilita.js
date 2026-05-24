@@ -109,7 +109,7 @@ export async function calcolaSlotDisponibili(operatoreId, data, durataMinuti) {
       if (isAfter(slotFine, fine)) break
 
       // Non nel passato
-      if (isAfter(cur, now) || cur.getTime() === now.getTime()) {
+      if (!isBefore(cur, now)) {
         // Non coperto da blocco
         const bloccato = resBlocchi.documents.some(b => {
           const bI = new Date(b.data_ora_inizio)

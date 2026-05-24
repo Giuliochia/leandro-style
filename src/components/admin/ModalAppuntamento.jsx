@@ -11,7 +11,7 @@ import Button from '../shared/Button'
 import Input from '../shared/Input'
 import { format, parseISO } from 'date-fns'
 import { TZ } from '../../utils/appuntamenti'
-import { formatInTimeZone, toZonedTime } from 'date-fns-tz'
+import { formatInTimeZone, toZonedTime, fromZonedTime } from 'date-fns-tz'
 
 export default function ModalAppuntamento({ appuntamento, serviziAppuntamento, operatoreId, dataIniziale, onClose, onSaved }) {
   const { servizi } = useServizi()
@@ -101,9 +101,8 @@ export default function ModalAppuntamento({ appuntamento, serviziAppuntamento, o
         .map(sid => servizi.find(s => s.$id === sid)?.nome)
         .filter(Boolean)
 
-      // Costruisci datetime in fuso Rome → UTC
-      const dataOraRome = new Date(`${form.data}T${form.ora}:00`)
-      const dataOraUTC = dataOraRome.toISOString()
+      // Interpreta data+ora nel fuso Europe/Rome e converte in UTC
+      const dataOraUTC = fromZonedTime(`${form.data}T${form.ora}:00`, TZ).toISOString()
 
       if (isModifica) {
         await aggiornaAppuntamento(appuntamento.$id, {

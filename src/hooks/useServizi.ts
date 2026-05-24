@@ -56,7 +56,7 @@ export function useServizi() {
       databases.updateDocument(DB_ID, COLLECTIONS.SERVIZI, a.$id, { ordine: b.ordine }),
       databases.updateDocument(DB_ID, COLLECTIONS.SERVIZI, b.$id, { ordine: a.ordine }),
     ])
-    fetch()
+    await fetch()
   }
 
   return { servizi, loading, error, crea, aggiorna, toggleAttivo, spostaOrdine, refresh: fetch }

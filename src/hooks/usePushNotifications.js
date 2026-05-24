@@ -3,6 +3,7 @@ import { databases } from '../appwrite/client'
 import { DB_ID, COLLECTIONS } from '../appwrite/config'
 import { ID, Query } from 'appwrite'
 import { useAuth } from '../auth/AuthContext'
+import { logError } from '../lib/logger'
 
 const VAPID_PUBLIC = import.meta.env.VITE_VAPID_PUBLIC_KEY
 
@@ -72,7 +73,7 @@ export function usePushNotifications(ruolo = 'cliente') {
       setSubscribed(true)
       return true
     } catch (e) {
-      console.error('Push subscription error:', e)
+      logError('usePushNotifications/chiediPermesso', e, { userId: user?.$id })
       return false
     } finally {
       setLoading(false)

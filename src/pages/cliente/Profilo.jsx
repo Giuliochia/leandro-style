@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import Input from '../../components/shared/Input'
 
 export default function Profilo() {
+  const navigate = useNavigate()
   const { user, cliente, updateProfilo, logout } = useAuth()
 
   const [nome, setNome] = useState(cliente?.nome || user?.name || '')
@@ -31,7 +33,7 @@ export default function Profilo() {
 
   const handleLogout = async () => {
     await logout()
-    window.location.href = '/login'
+    navigate('/login', { replace: true })
   }
 
   return (

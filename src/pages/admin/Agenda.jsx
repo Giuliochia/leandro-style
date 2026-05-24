@@ -37,7 +37,7 @@ export default function Agenda() {
 
   const lunediCorrente = useMemo(
     () => startOfWeek(dataCorrente, { weekStartsOn: 1 }),
-    [dataCorrente.toDateString()]
+    [dataCorrente]
   )
 
   const opAttivo = operatori.find(o => o.$id === operatoreId) || operatori[0]

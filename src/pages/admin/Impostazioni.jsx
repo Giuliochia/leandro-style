@@ -113,12 +113,16 @@ function EccezioniApertura() {
 
   useEffect(() => {
     if (!operatori.length) return
-    databases.listDocuments(DB_ID, COLLECTIONS.ORARI_LAVORO, [
-      Query.equal('operatore_id', operatori[0].$id),
-      Query.equal('attivo', true),
-      Query.limit(50),
-    ]).then(res => {
-      setOrariSpeciali(res.documents.filter(o => o.data_specifica))
+    Promise.all(
+      operatori.map(op =>
+        databases.listDocuments(DB_ID, COLLECTIONS.ORARI_LAVORO, [
+          Query.equal('operatore_id', op.$id),
+          Query.limit(50),
+        ])
+      )
+    ).then(results => {
+      const tutti = results.flatMap(r => r.documents.filter(o => o.attivo !== false && o.data_specifica))
+      setOrariSpeciali(tutti)
     }).catch(e => logError('Impostazioni/loadOrariSpeciali', e))
   }, [operatori])
 
@@ -130,8 +134,10 @@ function EccezioniApertura() {
     try {
       await creaEccezioneApertura(nuovaData)
       if (operatori.length) {
-        const doc = await creaOrarioSpeciale(operatori[0].$id, nuovaData, oraInizio, oraFine)
-        setOrariSpeciali(prev => [...prev, doc])
+        const docs = await Promise.all(
+          operatori.map(op => creaOrarioSpeciale(op.$id, nuovaData, oraInizio, oraFine))
+        )
+        setOrariSpeciali(prev => [...prev, ...docs])
       }
       setNuovaData('')
       setOraInizio('09:00')

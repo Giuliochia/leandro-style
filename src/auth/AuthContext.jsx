@@ -210,7 +210,7 @@ export function AuthProvider({ children }) {
       }
       applyCliente(c)
     }
-    return { admin: await checkAdmin() }
+    return { admin }
   }, [checkAdmin, fetchCliente, fetchClienteByEmail, fetchClienteConBackoff, applyCliente])
 
   const logout = async () => {
@@ -270,7 +270,11 @@ export function AuthProvider({ children }) {
       confirmPasswordRecovery,
       confirmEmailVerification,
       updateProfilo,
-      refreshCliente: () => user && fetchCliente(user.$id).then(applyCliente),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      refreshCliente: useCallback(
+        () => user && fetchCliente(user.$id).then(applyCliente),
+        [user, fetchCliente, applyCliente]
+      ),
     }}>
       {children}
     </AuthContext.Provider>

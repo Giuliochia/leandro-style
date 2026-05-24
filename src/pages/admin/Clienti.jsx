@@ -8,20 +8,7 @@ import EmptyState from '../../components/shared/EmptyState'
 import Spinner from '../../components/shared/Spinner'
 import { format } from 'date-fns'
 import { it } from 'date-fns/locale'
-
-const STATI_LABEL = {
-  prenotato: 'Prenotato',
-  completato: 'Completato',
-  annullato: 'Annullato',
-  no_show: 'No show',
-}
-
-const STATI_CLASS = {
-  prenotato: 'badge--blue',
-  completato: 'badge--green',
-  annullato: 'badge--gray',
-  no_show: 'badge--red',
-}
+import { STATI_LABEL, STATI_CLASS } from '../../utils/appuntamenti'
 
 export default function Clienti() {
   const [cerca, setCerca] = useState('')
