@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { databases } from '../appwrite/client'
 import { DB_ID, COLLECTIONS } from '../appwrite/config'
-import { ID, Query } from 'appwrite'
+import { ID, Query, Permission, Role } from 'appwrite'
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, formatISO } from 'date-fns'
 import { logError } from '../lib/logger'
 
@@ -203,6 +203,10 @@ export async function creaAppuntamento({
 
   let app
   try {
+    const perms = accountId
+      ? [Permission.read(Role.user(accountId)), Permission.update(Role.user(accountId)), Permission.delete(Role.user(accountId))]
+      : [Permission.read(Role.users()), Permission.update(Role.users())]
+
     app = await databases.createDocument(DB_ID, COLLECTIONS.APPUNTAMENTI, ID.unique(), {
       cliente_id: clienteId,
       operatore_id: operatoreId,
@@ -216,7 +220,7 @@ export async function creaAppuntamento({
       cliente_nome: clienteNome || '',
       servizi_nomi: (Array.isArray(serviziNomi) ? serviziNomi : []).join(', '),
       slot_key: slotKey,
-    })
+    }, perms)
   } catch (e) {
     // 409 = slot già occupato (index UNIQUE violato) — messaggio user-friendly
     if (e?.code === 409) {
