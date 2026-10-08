@@ -38,17 +38,6 @@ export default function Waitlist({
           + Nuova richiesta
         </button>
       </div>
-      <div className="ls-wait-explainer">
-        <span className="ls-wait-symbol">↗</span>
-        <p>
-          <strong>
-            Una cancellazione può diventare un nuovo appuntamento.
-          </strong>
-          <br />
-          Gli orari proposti rispettano preferenze, durata e disponibilità.
-          L’inserimento è manuale: nessun messaggio viene inviato.
-        </p>
-      </div>
       {requests.length === 0 && (
         <div className="ls-empty-state">
           <h2>Nessuna richiesta in attesa.</h2>

@@ -1,0 +1,853 @@
+/* Salon work first. One page, one task, quiet tools around the appointment book. */
+.ls-studio {
+  display: block;
+  background: #f6f4ef;
+  --paper: #f6f4ef;
+  --ink: #292723;
+  --muted: #757169;
+  --line: #ddd8ce;
+  --accent: #9e573b;
+  color: #292723;
+  font-size: 14px;
+}
+.ls-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 76px;
+  width: 100%;
+  padding: 0 36px;
+  background: #fff;
+  color: #292723;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 48px;
+  border-bottom: 1px solid #ddd8ce;
+}
+.ls-brand {
+  font-size: 13px;
+  letter-spacing: 2px;
+  gap: 12px;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+.ls-brand img {
+  width: 43px;
+  height: 43px;
+  background: #202824;
+}
+.ls-brand b {
+  font-size: 10px;
+  letter-spacing: 4px;
+}
+.ls-sidebar nav {
+  display: flex;
+  gap: 26px;
+  align-self: stretch;
+  align-items: stretch;
+  margin: 0;
+}
+.ls-sidebar nav button {
+  padding: 0 3px;
+  background: none !important;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: #79736a;
+  font-size: 14px;
+  gap: 8px;
+  flex: none;
+}
+.ls-sidebar nav button.is-active {
+  color: #28251f;
+  border-bottom-color: #9e573b;
+  font-weight: 600;
+}
+.ls-sidebar nav button:hover {
+  color: #28251f;
+}
+.ls-sidebar nav button i {
+  display: none;
+}
+.ls-sidebar nav button svg {
+  display: none;
+}
+.ls-side-bottom {
+  position: static;
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 auto;
+  gap: 18px;
+  flex-shrink: 0;
+}
+.ls-demo-label {
+  font-size: 10px;
+  color: #a09a91;
+  letter-spacing: 0.3px;
+}
+.ls-booking-link {
+  width: auto;
+  border: 0;
+  background: none;
+  color: #6b655c;
+  font-size: 12px !important;
+  padding: 8px 0;
+  border-radius: 0;
+  max-width: none;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.ls-more {
+  position: relative;
+}
+.ls-more summary {
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 8px;
+  list-style: none;
+  color: #797269;
+}
+.ls-more summary::-webkit-details-marker {
+  display: none;
+}
+.ls-more[open] summary {
+  color: #9e573b;
+}
+.ls-more > div {
+  position: absolute;
+  right: 0;
+  top: 44px;
+  width: 190px;
+  padding: 7px;
+  background: white;
+  border: 1px solid #ddd8ce;
+  border-radius: 4px;
+  box-shadow: 0 6px 20px #2a211c10;
+  display: grid;
+  gap: 3px;
+}
+.ls-more button {
+  background: none;
+  border: 0;
+  padding: 11px;
+  font-size: 13px;
+  color: #484139;
+  text-align: left;
+  border-radius: 2px;
+}
+.ls-more button:hover {
+  background: #f5f1ea;
+}
+.ls-page {
+  padding: 25px 32px 16px;
+  max-width: 1360px;
+  animation: none;
+}
+.ls-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 20px;
+  gap: 20px;
+}
+.ls-heading h1 {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+  margin: 0;
+  color: #2b2721;
+}
+.ls-heading > .ls-primary {
+  margin: 0;
+  max-width: none;
+  width: auto;
+}
+.ls-primary {
+  background: #383027;
+  color: #fff;
+  border-radius: 3px;
+  font-size: 13px !important;
+  padding: 11px 16px;
+  box-shadow: none;
+  transform: none !important;
+}
+.ls-primary:hover {
+  background: #514336;
+}
+.ls-secondary {
+  background: #fff;
+  border-color: #d9d1c5;
+  color: #5b5145;
+  font-size: 12px !important;
+  padding: 10px 14px;
+  border-radius: 3px;
+}
+.ls-secondary:hover {
+  background: #f6f1e9;
+}
+.ls-agenda-v2 .ls-agenda-toolbar {
+  margin-bottom: 12px;
+}
+.ls-day-controls button {
+  border-color: #ddd6c9;
+  background: white;
+  color: #6b6257;
+  height: 35px;
+  min-width: 35px;
+}
+.ls-day-controls input {
+  font-size: 14px;
+  color: #51483d;
+  padding: 6px 10px;
+}
+.ls-day-controls button:last-child {
+  font-size: 12px;
+}
+.ls-agenda-view-switch {
+  background: #eeebe5;
+  border-color: #dcd5c9;
+}
+.ls-agenda-view-switch button {
+  font-size: 12px;
+  color: #8b8173;
+  padding: 7px 15px;
+}
+.ls-agenda-view-switch button[aria-pressed="true"] {
+  color: #393026;
+  box-shadow: none;
+}
+.ls-team-tabs {
+  gap: 16px;
+  padding-bottom: 10px;
+  border-color: #dfd8cc;
+}
+.ls-team-tabs button {
+  font-size: 13px;
+  color: #817669;
+  padding: 8px 12px;
+  gap: 8px;
+}
+.ls-team-tabs button[aria-pressed="true"] {
+  background: #eae3d8;
+  color: #473828;
+  border-color: transparent;
+}
+.ls-team-tabs small {
+  font-size: 11px;
+  color: #8b7d6b;
+}
+.ls-team-tabs i {
+  width: 5px;
+  height: 5px;
+}
+.ls-agenda-secondary {
+  display: flex;
+  justify-content: flex-end;
+  margin: 9px 0 13px;
+}
+.ls-wait-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  padding: 3px 0;
+  background: none;
+  color: #79624b;
+  font-size: 12px !important;
+}
+.ls-wait-shortcut span {
+  font-size: 10px;
+  color: #9c8a73;
+}
+.ls-agenda-v2 .ls-calendar-wrap {
+  border-color: #dfd8cd;
+  border-radius: 3px;
+}
+.ls-agenda-v2 .ls-hours-head,
+.ls-agenda-v2 .ls-staff-head,
+.ls-agenda-v2 .ls-track {
+  border-color: #e1dbd0;
+}
+.ls-agenda-v2 .ls-staff-head {
+  height: 59px;
+  padding: 10px 15px;
+}
+.ls-agenda-v2 .ls-hours-head {
+  height: 59px;
+}
+.ls-agenda-v2 .ls-staff-head small {
+  display: none;
+}
+.ls-agenda-v2 .ls-staff-count {
+  background: #f3efe7;
+  color: #9b8b76;
+}
+.ls-agenda-v2 .ls-staff-head .ls-avatar {
+  width: 27px;
+  height: 27px;
+  font-size: 10px;
+}
+.ls-agenda-v2 .ls-hours > span {
+  font-size: 10px;
+  color: #96897a;
+}
+.ls-agenda-v2 .ls-track {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 59px,
+    #f5f1eb 59px,
+    #f5f1eb 60px,
+    transparent 60px,
+    transparent 119px,
+    #eae3d8 119px,
+    #eae3d8 120px
+  );
+}
+.ls-agenda-v2 .ls-lunch {
+  background: repeating-linear-gradient(
+    -45deg,
+    #f6f2eb,
+    #f6f2eb 5px,
+    #ede7dc 5px,
+    #ede7dc 6px
+  );
+  color: #a3917b;
+  font-size: 9px;
+}
+.ls-agenda-v2 .ls-appointment {
+  background: color-mix(in srgb, var(--event-color) 12%, white);
+  color: #3d3932;
+  box-shadow: none;
+  border-radius: 2px;
+}
+.ls-agenda-v2 .ls-appointment strong {
+  font-weight: 500;
+  font-size: 14px;
+}
+.ls-agenda-v2 .ls-appointment small {
+  color: #8b7c69;
+}
+.ls-agenda-v2 .ls-appointment.is-complete {
+  background: #f4f1eb;
+  color: #8c8071;
+  border-color: #cfc4b3;
+}
+.ls-free-slot {
+  background: none;
+  border: 0;
+  color: #b4a58e;
+  font-size: 11px !important;
+  justify-content: flex-start;
+  padding: 10px;
+}
+.ls-free-slot:hover {
+  background: #f8f3e9;
+  color: #826949;
+}
+.ls-free-slot small {
+  display: none;
+}
+.ls-list-appointment {
+  border-color: #ddd5c8;
+  background: #fff;
+  color: #3d352b;
+  box-shadow: none !important;
+}
+.ls-list-appointment.is-complete {
+  background: #f0ebe2;
+}
+.ls-list-appointment > span:last-of-type,
+.ls-list-appointment small {
+  color: #8e7d66;
+}
+.ls-list-appointment strong {
+  font-weight: 500;
+}
+.ls-avatar {
+  background: #e9e1d4;
+  color: #7a6650;
+}
+.ls-list-tools {
+  margin: 0 0 14px;
+}
+.ls-search input {
+  font-size: 14px;
+  color: #5a4b39;
+}
+.ls-client-list > button {
+  border-color: #ddd4c6;
+  color: #3c3328;
+  padding: 20px 8px;
+}
+.ls-client-list strong {
+  font-size: 15px;
+}
+.ls-client-list small {
+  font-size: 12px;
+  color: #8c7a61;
+}
+.ls-client-list > button:hover {
+  background: #eee6da;
+}
+.ls-client-list > button > span:not(.ls-avatar) {
+  font-size: 11px;
+  color: #8b785e;
+}
+.ls-service-list > button {
+  border-color: #ddd4c5;
+  color: #47392b;
+  padding: 22px 0;
+}
+.ls-service-list h2 {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+.ls-service-list p {
+  font-size: 12px;
+  color: #8b785e;
+}
+.ls-service-list strong {
+  font-size: 21px;
+}
+.ls-service-list button > span:last-child {
+  font-size: 11px;
+  color: #8b785e;
+}
+.ls-backup {
+  border: 0;
+  padding: 0;
+  max-width: 600px;
+}
+.ls-backup > p:not(.ls-eyebrow) {
+  font-size: 14px;
+  color: #807059;
+}
+.ls-backup .ls-secondary {
+  margin-left: 10px;
+}
+.ls-wait-toolbar {
+  margin: 0 0 22px;
+  align-items: end;
+}
+.ls-wait-toolbar label {
+  font-size: 12px;
+  color: #8b775b;
+}
+.ls-wait-toolbar input {
+  color: #5a452e;
+  border-color: #d9ccb8;
+  font-size: 13px;
+}
+.ls-wait-card {
+  border-color: #dacfbd;
+  padding: 24px 0;
+}
+.ls-wait-person h2 {
+  font-size: 16px;
+  color: #483824;
+}
+.ls-wait-person p {
+  font-size: 12px;
+  color: #938063;
+}
+.ls-wait-preferences span {
+  background: #eee6d9;
+  color: #9a8060;
+  font-size: 11px;
+}
+.ls-wait-match label {
+  font-size: 12px;
+  color: #8a7151;
+}
+.ls-wait-match select {
+  border-color: #dbccb5;
+  color: #705337;
+  font-size: 13px;
+  max-width: 500px;
+}
+.ls-wait-match p {
+  color: #987d5d;
+  font-size: 13px;
+}
+.ls-wait-person > button {
+  color: #a78d6b;
+}
+.ls-page-footer {
+  margin-top: 23px;
+  padding-top: 13px;
+  border-color: #e0d5c4;
+  font-size: 9px;
+  color: #a58e6e;
+}
+.ls-page-footer > span:first-child {
+  letter-spacing: 1px;
+}
+.ls-agenda-footer {
+  font-size: 10px;
+  color: #aa9372;
+}
+.ls-dialog {
+  background: #faf8f3;
+  color: #4a3b28;
+  border-color: #ded1bb;
+  box-shadow: -12px 0 40px #2c211515;
+}
+.ls-dialog::backdrop {
+  background: #251d1645;
+  backdrop-filter: none;
+}
+.ls-dialog h2 {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  letter-spacing: -0.4px;
+}
+.ls-dialog .ls-eyebrow {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #a28965;
+}
+.ls-dialog label {
+  font-size: 12px;
+  color: #937853;
+}
+.ls-dialog input,
+.ls-dialog select,
+.ls-dialog textarea {
+  font-size: 14px;
+  color: #61492d;
+  border-color: #ded0b9;
+}
+.ls-dialog-intro {
+  font-size: 12px;
+  color: #a18761;
+}
+.ls-client-hero p {
+  color: #a48963;
+  font-size: 11px;
+}
+.ls-profile-tabs {
+  border-color: #e0d2ba;
+}
+.ls-profile-tabs button {
+  font-size: 13px;
+  color: #a1855d;
+}
+.ls-profile-tabs button[aria-pressed="true"] {
+  color: #745431;
+  border-color: #a7774b;
+}
+.ls-profile-link {
+  color: #a67448;
+  font-size: 12px !important;
+}
+.ls-profile-history p {
+  color: #a08058;
+  font-size: 12px;
+}
+.ls-booking-story {
+  background: #383027;
+}
+.ls-booking-story .ls-motion-art {
+  display: none;
+}
+.ls-booking-story h2 {
+  font-size: 33px;
+}
+.ls-undo {
+  background: #f7f1e6;
+  color: #846848;
+  border-color: #d9c6a8;
+  box-shadow: 0 5px 14px #33241512;
+}
+.ls-undo button {
+  color: #8f6338;
+}
+.ls-toast {
+  background: #473625;
+  box-shadow: none;
+  color: #fffaf1;
+}
+@media (max-width: 900px) {
+  .ls-sidebar {
+    padding: 0 22px;
+    gap: 28px;
+  }
+  .ls-sidebar nav {
+    gap: 18px;
+  }
+  .ls-side-bottom {
+    gap: 12px;
+  }
+  .ls-page {
+    padding: 22px;
+  }
+  .ls-booking-link {
+    font-size: 11px !important;
+  }
+}
+@media (max-width: 720px) {
+  .ls-sidebar {
+    height: 104px;
+    padding: 12px 18px 0;
+    gap: 0;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .ls-brand {
+    font-size: 12px;
+    gap: 9px;
+    line-height: 1.3;
+  }
+  .ls-brand img {
+    width: 31px;
+    height: 31px;
+  }
+  .ls-brand br {
+    display: none;
+  }
+  .ls-brand b {
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-left: 5px;
+  }
+  .ls-side-bottom {
+    margin-left: auto;
+    align-items: center;
+    gap: 12px;
+    height: 31px;
+  }
+  .ls-demo-label {
+    font-size: 9px;
+  }
+  .ls-booking-link {
+    padding: 5px 0;
+    font-size: 11px !important;
+  }
+  .ls-more summary {
+    padding: 1px 0 1px 7px;
+    font-size: 25px;
+  }
+  .ls-more > div {
+    top: 34px;
+  }
+  .ls-sidebar nav {
+    order: 3;
+    flex-basis: 100%;
+    height: 43px;
+    margin-top: 11px;
+    gap: 25px;
+    align-items: stretch;
+  }
+  .ls-sidebar nav button {
+    font-size: 14px;
+    padding: 0;
+    flex: none;
+    justify-content: flex-start;
+    gap: 0;
+    flex-direction: row;
+  }
+  .ls-sidebar nav button svg {
+    display: none;
+  }
+  .ls-page {
+    padding: 18px;
+  }
+  .ls-heading {
+    margin-bottom: 15px;
+  }
+  .ls-heading h1 {
+    font-size: 23px;
+  }
+  .ls-heading > .ls-primary {
+    width: auto;
+    margin: 0;
+    padding: 9px 12px;
+    font-size: 12px !important;
+    gap: 6px;
+  }
+  .ls-heading > .ls-primary svg {
+    width: 15px;
+  }
+  .ls-heading > .ls-secondary {
+    padding: 8px;
+    font-size: 10px !important;
+  }
+  .ls-agenda-v2 .ls-agenda-toolbar {
+    gap: 10px;
+    flex-wrap: nowrap;
+    margin-bottom: 11px;
+  }
+  .ls-day-controls {
+    gap: 3px !important;
+  }
+  .ls-day-controls input {
+    font-size: 12px !important;
+    width: 121px !important;
+    padding: 5px 2px !important;
+  }
+  .ls-day-controls button {
+    min-width: 28px;
+    height: 31px;
+  }
+  .ls-day-controls button:last-child {
+    display: none;
+  }
+  .ls-agenda-view-switch {
+    padding: 2px;
+  }
+  .ls-agenda-view-switch button {
+    padding: 6px 9px;
+    font-size: 11px;
+  }
+  .ls-team-tabs {
+    gap: 8px;
+    padding-bottom: 10px;
+  }
+  .ls-team-tabs button {
+    padding: 8px 9px;
+    font-size: 13px;
+  }
+  .ls-team-tabs small {
+    font-size: 10px;
+  }
+  .ls-agenda-secondary {
+    margin: 8px 0 12px;
+    justify-content: flex-start;
+  }
+  .ls-wait-shortcut {
+    font-size: 12px !important;
+  }
+  .ls-wait-shortcut span {
+    font-size: 10px;
+    color: #b29875;
+  }
+  .ls-agenda-v2 .ls-staff-head {
+    height: 48px;
+    font-size: 13px;
+  }
+  .ls-agenda-v2 .ls-hours-head {
+    height: 48px;
+  }
+  .ls-agenda-v2 .ls-appointment strong {
+    font-size: 14px;
+  }
+  .ls-agenda-v2 .ls-calendar-wrap {
+    margin: 0 -18px;
+  }
+  .ls-list-appointment {
+    padding: 14px;
+  }
+  .ls-list-tools {
+    margin-top: 0;
+  }
+  .ls-search input {
+    width: 230px;
+    font-size: 14px;
+  }
+  .ls-client-list small {
+    font-size: 11px;
+  }
+  .ls-service-list h2 {
+    font-size: 17px;
+  }
+  .ls-service-list p {
+    font-size: 11px;
+    max-width: 210px;
+  }
+  .ls-service-list button > span:first-child {
+    display: none;
+  }
+  .ls-wait-match button {
+    font-size: 12px !important;
+  }
+  .ls-wait-toolbar {
+    gap: 12px;
+  }
+  .ls-page-footer > span:first-child {
+    display: none;
+  }
+  .ls-page-footer {
+    padding-top: 10px;
+    margin-top: 18px;
+  }
+  .ls-page-footer > span {
+    margin-top: 0;
+  }
+  .ls-backup .ls-secondary {
+    margin-left: 0;
+    display: flex;
+    width: fit-content;
+  }
+  .ls-dialog .ls-form-row {
+    gap: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ls-studio *,
+  .ls-dialog,
+  .ls-dialog * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+/* Customer booking is a single clear form, without a decorative hero panel. */
+.ls-booking-story {
+  display: none;
+}
+.ls-booking-split {
+  display: block;
+}
+.ls-dialog-wide {
+  width: 520px;
+  max-width: 95vw;
+  padding: 26px;
+}
+.ls-booking-form {
+  padding: 0;
+}
+.ls-booking-form .ls-eyebrow {
+  display: none;
+}
+.ls-booking-form h2 {
+  font-size: 25px;
+  margin-bottom: 24px;
+}
+.ls-dialog-wide .ls-dialog-heading {
+  margin-bottom: 18px;
+}
+.ls-slots button {
+  color: #8d6740;
+  border-color: #dec9ae;
+  font-size: 12px;
+  padding: 9px 12px;
+}
+.ls-slots button.selected {
+  background: #58412b;
+  border-color: #58412b;
+}
+.ls-booking-form fieldset {
+  margin: 18px 0;
+}
+.ls-booking-form legend {
+  font-size: 12px;
+  color: #a8855b;
+}
+.ls-booking-form form > .ls-primary {
+  margin-top: 14px;
+}
+@media (max-width: 720px) {
+  .ls-dialog-wide {
+    padding: 22px;
+  }
+  .ls-dialog-wide .ls-form-row {
+    gap: 10px;
+  }
+}

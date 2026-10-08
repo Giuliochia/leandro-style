@@ -14,7 +14,9 @@ Il layout amministratore reale riceve navigazione laterale su desktop, navigazio
 
 ## Direzione visiva
 
-Verde carbone, carta chiara, accento rame e tre colori discreti per il team. Titoli editoriali, interfaccia operativa compatta. Agenda come elemento dominante; nessuna metrica fittizia di crescita. Motion: ingresso delle viste, pannello laterale, transizioni degli appuntamenti, barre animate e composizione cinetica nella prenotazione. Tutte rispettano `prefers-reduced-motion`; dialog native per focus ed Escape.
+Agenda al centro, fondo chiaro caldo, testi diretti e dimensioni leggibili. La navigazione principale contiene Agenda, Clienti e Listino. Lista d’attesa dall’agenda e backup nelle opzioni secondarie. Rimossi slogan, sidebar da dashboard, KPI iniziali e pannello decorativo della prenotazione cliente. Una sola azione principale per schermata.
+
+Motion discreto per pannelli e spostamenti, con rispetto di `prefers-reduced-motion`. Il logo originale rimane. L’interfaccia punta al lavoro quotidiano del salone, evitando messaggi promozionali nel gestionale.
 
 ## Come proporlo a Leandro
 

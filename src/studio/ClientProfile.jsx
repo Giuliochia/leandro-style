@@ -111,7 +111,7 @@ export default function ClientProfile({
               .join("") || "+"}
           </span>
           <div>
-            <h2>{draft.name || "Una nuova persona"}</h2>
+            <h2>{draft.name || "Nuovo cliente"}</h2>
             <p>
               {history.filter((a) => a.status === "completato").length} visite
               completate · {history.length} appuntamenti

@@ -5,7 +5,6 @@ import {
   clock,
   minuteOf,
   seed,
-  duration,
   validateBooking,
   availableSlots,
   isState,
@@ -16,6 +15,7 @@ import {
 } from "./model.mjs";
 import "./studio.css";
 import "./studio-v2.css";
+import "./salon-simple.css";
 import Dialog from "./Dialog.jsx";
 import Agenda from "./Agenda.jsx";
 import Waitlist from "./Waitlist.jsx";
@@ -34,9 +34,9 @@ const labels = {
 const views = [
   ["agenda", "Agenda", "calendar"],
   ["clients", "Clienti", "people"],
-  ["waitlist", "Attesa", "calendar"],
-  ["services", "Servizi", "scissors"],
-  ["insights", "Andamento", "chart"],
+  ["waitlist", "Lista d’attesa", "calendar"],
+  ["services", "Listino", "scissors"],
+  ["insights", "Backup", "chart"],
 ];
 function Icon({ name }) {
   const paths = {
@@ -122,15 +122,6 @@ export default function StudioDemo() {
     const timer = setTimeout(() => setToast(""), 4500);
     return () => clearTimeout(timer);
   }, [toast]);
-  const active = state.appointments.filter(
-    (a) => a.date === date && a.status !== "annullato",
-  );
-  const total = active.reduce(
-    (n, a) => n + (state.services.find((s) => s.id === a.service)?.price || 0),
-    0,
-  );
-  const minutes = active.reduce((n, a) => n + duration(a, state.services), 0);
-
   const update = (item) => {
     const error = validateBooking(item, state);
     if (error) return error;
@@ -194,123 +185,94 @@ export default function StudioDemo() {
             <b>STYLE</b>
           </span>
         </div>
-        <div className="ls-workspace">
-          SALON WORKSPACE<span>Il tuo salone, sotto controllo.</span>
-        </div>
         <nav aria-label="Navigazione principale">
-          {views.map(([id, label, icon]) => (
-            <button
-              key={id}
-              className={view === id ? "is-active" : ""}
-              onClick={() => {
-                setView(id);
-                setQuery("");
-              }}
-            >
-              <Icon name={icon} />
-              {label}
-              {view === id && <i />}
-            </button>
-          ))}
+          {views
+            .filter(([id]) => ["agenda", "clients", "services"].includes(id))
+            .map(([id, label, icon]) => (
+              <button
+                key={id}
+                className={view === id ? "is-active" : ""}
+                onClick={() => {
+                  setView(id);
+                  setQuery("");
+                }}
+              >
+                <Icon name={icon} />
+                {label}
+                {view === id && <i />}
+              </button>
+            ))}
         </nav>
         <div className="ls-side-bottom">
+          <span className="ls-demo-label">Demo</span>
           <button className="ls-booking-link" onClick={() => setBooking(true)}>
-            Prova la prenotazione cliente <Icon name="arrow" />
+            Vista cliente
           </button>
-          <div className="ls-account">
-            <span className="ls-avatar">L</span>
+          <details className="ls-more">
+            <summary aria-label="Altre opzioni">⋯</summary>
             <div>
-              Leandro Style<small>Ambiente dimostrativo</small>
+              <button
+                onClick={(e) => {
+                  setView("waitlist");
+                  e.currentTarget.closest("details").open = false;
+                }}
+              >
+                Lista d’attesa
+              </button>
+              <button
+                onClick={(e) => {
+                  setView("insights");
+                  e.currentTarget.closest("details").open = false;
+                }}
+              >
+                Backup dei dati
+              </button>
             </div>
-          </div>
+          </details>
         </div>
       </aside>
       <main className="ls-main">
-        <header className="ls-topbar">
-          <span>
-            Workspace <span className="ls-slash">/</span>{" "}
-            {views.find((v) => v[0] === view)[1]}
-          </span>
-          <span className="ls-demo">
-            <i /> DEMO · dati locali
-          </span>
-        </header>
         <section className="ls-page" key={view}>
           <div className="ls-heading">
-            <div>
-              <p className="ls-eyebrow">LEANDRO STYLE / STUDIO</p>
-              <h1>
-                {view === "agenda"
-                  ? "Ogni appuntamento, al suo posto."
-                  : view === "waitlist"
-                    ? "Ogni spazio, una possibilità."
-                    : view === "clients"
-                      ? "Le persone, prima di tutto."
-                      : view === "services"
-                        ? "Il valore del tuo lavoro."
-                        : "Una giornata in numeri."}
-              </h1>
-              <p>
-                {view === "agenda"
-                  ? "Tempo ben organizzato. Più spazio per il tuo mestiere."
-                  : view === "waitlist"
-                    ? "Trova le richieste compatibili con gli spazi liberi."
-                    : view === "clients"
-                      ? "Preferenze e storico, sempre a portata di mano."
-                      : view === "services"
-                        ? "Durate e prezzi guidano agenda e prenotazioni."
-                        : "Dati calcolati dagli appuntamenti della demo."}
-              </p>
-            </div>
-            <button
-              className="ls-primary"
-              onClick={() => setPanel({ type: "appointment", item: newItem() })}
-            >
-              <Icon name="plus" /> Nuovo appuntamento
-            </button>
+            <h1>{views.find(([id]) => id === view)[1]}</h1>
+            {view === "agenda" && (
+              <button
+                className="ls-primary"
+                onClick={() =>
+                  setPanel({ type: "appointment", item: newItem() })
+                }
+              >
+                <Icon name="plus" /> Prenota
+              </button>
+            )}
+            {view === "clients" && (
+              <button
+                className="ls-primary"
+                onClick={() =>
+                  setPanel({
+                    type: "client",
+                    item: { id: "", name: "", note: "" },
+                  })
+                }
+              >
+                <Icon name="plus" /> Nuovo cliente
+              </button>
+            )}
+            {view === "waitlist" && (
+              <button
+                className="ls-secondary"
+                onClick={() => setView("agenda")}
+              >
+                ← Torna all’agenda
+              </button>
+            )}
           </div>
           {storageError && (
             <p className="ls-error" role="alert">
               Il salvataggio nel browser non è riuscito. Esporta un backup dalla
-              sezione Andamento prima di chiudere questa pagina.
+              sezione Backup prima di chiudere questa pagina.
             </p>
           )}
-          <div className="ls-metrics">
-            <div>
-              <span>Appuntamenti del giorno</span>
-              <strong>{active.length.toString().padStart(2, "0")}</strong>
-              <small>
-                {active.filter((a) => a.status === "completato").length}{" "}
-                completati
-              </small>
-            </div>
-            <div>
-              <span>Valore in agenda</span>
-              <strong>{money(total)}</strong>
-              <small>Listino demo · non incasso</small>
-            </div>
-            <div>
-              <span>Tempo prenotato</span>
-              <strong>
-                {Math.floor(minutes / 60)}
-                <em>h</em> {minutes % 60}
-                <em>m</em>
-              </strong>
-              <small>Su {STAFF.length * 9} ore di disponibilità</small>
-            </div>
-            <div className="ls-occupancy">
-              <span>Occupazione giornaliera</span>
-              <strong>
-                {Math.round((minutes / (STAFF.length * 540)) * 100)}
-                <em>%</em>
-              </strong>
-              <div className="ls-meter">
-                <i
-                  style={{ width: `${Math.min((minutes / 1620) * 100, 100)}%` }}
-                />
-              </div>
-            </div>
-          </div>
           {view === "agenda" && (
             <Agenda
               state={state}
@@ -402,17 +364,6 @@ export default function StudioDemo() {
                     onChange={(e) => setQuery(e.target.value)}
                   />
                 </label>
-                <button
-                  className="ls-secondary"
-                  onClick={() =>
-                    setPanel({
-                      type: "client",
-                      item: { id: "", name: "", note: "" },
-                    })
-                  }
-                >
-                  + Aggiungi cliente
-                </button>
               </div>
               <div className="ls-client-list">
                 {state.clients
@@ -471,61 +422,29 @@ export default function StudioDemo() {
             </div>
           )}
           {view === "insights" && (
-            <div className="ls-insights">
-              <div>
-                <p className="ls-eyebrow">DISTRIBUZIONE DEL LAVORO</p>
-                <h2>Il ritmo del team.</h2>
-                {STAFF.map((s) => {
-                  const amount = active
-                    .filter((a) => a.staff === s.id)
-                    .reduce((n, a) => n + duration(a, state.services), 0);
-                  return (
-                    <div className="ls-team-bar" key={s.id}>
-                      <span>{s.name}</span>
-                      <div>
-                        <i
-                          style={{
-                            width: `${Math.min((amount / 540) * 100, 100)}%`,
-                            background: s.color,
-                          }}
-                        />
-                      </div>
-                      <strong>{Math.round((amount / 540) * 100)}%</strong>
-                    </div>
-                  );
-                })}
-                <p className="ls-small">
-                  Disponibilità demo: 09–13 e 14–19. Le cancellazioni non
-                  occupano tempo.
-                </p>
-              </div>
-              <div className="ls-backup">
-                <p className="ls-eyebrow">I DATI DELLA DEMO</p>
-                <h2>Un lavoro che puoi conservare.</h2>
-                <p>
-                  Le modifiche restano in questo browser. Esporta un backup per
-                  spostarle su un altro dispositivo.
-                </p>
-                <button
-                  className="ls-primary"
-                  onClick={() =>
-                    download(
-                      "leandro-studio-backup.json",
-                      JSON.stringify(state, null, 2),
-                    )
-                  }
-                >
-                  Esporta backup JSON
-                </button>
-                <label className="ls-secondary">
-                  Importa backup
-                  <input type="file" accept=".json" onChange={importData} />
-                </label>
-                <p className="ls-small">
-                  Questa anteprima non invia messaggi, non incassa pagamenti e
-                  non modifica il gestionale collegato ad Appwrite.
-                </p>
-              </div>
+            <div className="ls-backup">
+              <p>
+                Le modifiche restano in questo browser. Esporta una copia per
+                conservarle o trasferirle.
+              </p>
+              <button
+                className="ls-primary"
+                onClick={() =>
+                  download(
+                    "leandro-studio-backup.json",
+                    JSON.stringify(state, null, 2),
+                  )
+                }
+              >
+                Esporta backup JSON
+              </button>
+              <label className="ls-secondary">
+                Importa backup
+                <input type="file" accept=".json" onChange={importData} />
+              </label>
+              <p className="ls-small">
+                Demo con dati locali. Nessun messaggio viene inviato.
+              </p>
             </div>
           )}
           <footer className="ls-page-footer">
@@ -706,11 +625,11 @@ function Editor({ panel, state, onClose, onSave, onClient, onNext }) {
           {isApp
             ? item.id
               ? "Dettaglio appuntamento"
-              : "Un nuovo appuntamento"
+              : "Nuovo appuntamento"
             : isClient
               ? item.id
                 ? item.name
-                : "Una nuova persona"
+                : "Nuovo cliente"
               : item.name}
         </h2>
         <p className="ls-dialog-intro">
@@ -950,9 +869,8 @@ function Booking({ state, onClose, onBook }) {
         <div className="ls-booking-story">
           <p className="ls-eyebrow">IL TUO MOMENTO</p>
           <h2>
-            Un buon taglio.
+            Leandro Style
             <br />
-            Un nuovo inizio.
           </h2>
           <div className="ls-motion-art" aria-hidden="true">
             <div />
@@ -970,7 +888,7 @@ function Booking({ state, onClose, onBook }) {
           {done ? (
             <>
               <span className="ls-success-mark">✓</span>
-              <h2>Il tuo momento è riservato.</h2>
+              <h2>Prenotazione registrata</h2>
               <p>
                 {date} · {clock(time)} ·{" "}
                 {STAFF.find((s) => s.id === staff).name}
@@ -1000,7 +918,7 @@ function Booking({ state, onClose, onBook }) {
               }}
             >
               <p className="ls-eyebrow">PRENOTA IL TUO APPUNTAMENTO</p>
-              <h2>Fai spazio a te.</h2>
+              <h2>Prenota un appuntamento</h2>
               <label>
                 Il servizio
                 <select

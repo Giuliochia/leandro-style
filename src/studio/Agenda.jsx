@@ -164,7 +164,11 @@ export default function Agenda({
           </button>
         </div>
       </div>
-      <div className="ls-team-tabs" role="group" aria-label="Filtra per professionista">
+      <div
+        className="ls-team-tabs"
+        role="group"
+        aria-label="Filtra per professionista"
+      >
         {!mobile && (
           <button
             aria-pressed={effective === "all"}
@@ -185,33 +189,10 @@ export default function Agenda({
           </button>
         ))}
       </div>
-      <div className="ls-day-focus">
-        <div>
-          <span className="ls-eyebrow">
-            {next ? "PROSSIMO APPUNTAMENTO" : "LA GIORNATA"}
-          </span>
-          {next ? (
-            <button onClick={() => onOpen(next)}>
-              <strong>{clock(next.start)}</strong>{" "}
-              {state.clients.find((c) => c.id === next.client).name}
-              <span>
-                {state.services.find((s) => s.id === next.service).name} →
-              </span>
-            </button>
-          ) : (
-            <p>Nessun appuntamento da iniziare.</p>
-          )}
-        </div>
-        <button className="ls-gap-notice" onClick={onWaitlist}>
-          {compatible > 0 ? (
-            <>
-              <strong>{compatible}</strong> richieste compatibili con gli spazi
-              liberi
-            </>
-          ) : (
-            "Apri la lista d’attesa"
-          )}{" "}
-          <span>↗</span>
+      <div className="ls-agenda-secondary">
+        <button className="ls-wait-shortcut" onClick={onWaitlist}>
+          Lista d’attesa
+          {compatible > 0 && <span>{compatible} richieste disponibili</span>} →
         </button>
       </div>
       {dragError && (
