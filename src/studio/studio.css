@@ -1257,7 +1257,7 @@
     font-size: 30px;
   }
   .ls-booking-story h2 br {
-    display: none;
+    display: initial;
   }
   .ls-booking-story > p:last-child {
     display: none;
