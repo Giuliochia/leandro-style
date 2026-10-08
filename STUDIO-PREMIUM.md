@@ -8,23 +8,21 @@ Questa proposta usa il gestionale esistente come base. Non promette ricavi: il p
 
 Agenda giornaliera per professionista, apertura del dettaglio, modifica/creazione/cancellazione/completamento, controllo delle sovrapposizioni e della pausa. Prenotazione cliente con disponibilità calcolata dallo stesso controllo. Schede clienti con note e storico, listino modificabile, calendario ICS, backup JSON validato. Modificare la durata di un servizio viene rifiutato se genera conflitti sugli appuntamenti esistenti.
 
-L'agenda dimostrativa usa 09–13 e 14–19, tre professionisti e listino illustrativo. Valore in agenda significa somma dei prezzi dei servizi, non fatturato o incasso. Occupazione è durata prenotata su 27 ore aggregate. Il gestionale Appwrite conserva la propria configurazione e le sue regole di disponibilità.
+L'agenda dimostrativa usa 09–13 e 14–19, tre professionisti e listino illustrativo. Valore in agenda significa somma dei prezzi dei servizi, non fatturato o incasso. Il gestionale Appwrite conserva la propria configurazione e le sue regole di disponibilità.
 
 Il layout amministratore reale riceve navigazione laterale su desktop, navigazione compatta su mobile, accesso al Team e una dashboard più sobria. La dashboard può caricarsi anche senza operatori e presenta errore/retry. Non è stata verificata con credenziali Appwrite di produzione.
 
 ## Direzione visiva
 
-Agenda al centro, fondo chiaro caldo, testi diretti e dimensioni leggibili. La navigazione principale contiene Agenda, Clienti e Listino. Lista d’attesa dall’agenda e backup nelle opzioni secondarie. Rimossi slogan, sidebar da dashboard, KPI iniziali e pannello decorativo della prenotazione cliente. Una sola azione principale per schermata.
+Agenda al centro, fondo chiaro caldo, testi diretti e dimensioni leggibili. La navigazione principale contiene Recupera, Agenda, Clienti e Listino. Il percorso Recupera è la nuova schermata iniziale. Lista d’attesa dall’agenda e backup nelle opzioni secondarie. Rimossi slogan, sidebar da dashboard, KPI iniziali e pannello decorativo della prenotazione cliente. Una sola azione principale per schermata.
 
 Motion discreto per pannelli e spostamenti, con rispetto di `prefers-reduced-motion`. Il logo originale rimane. L’interfaccia punta al lavoro quotidiano del salone, evitando messaggi promozionali nel gestionale.
 
 ## Come proporlo a Leandro
 
-Vendere tempo restituito al salone e un'esperienza di prenotazione coerente con il suo marchio. Fare una dimostrazione di sette minuti: registrare un cliente, provare un orario occupato, prenotare dal percorso cliente e trovare l'appuntamento in agenda. Usare servizi e orari reali soltanto dopo raccolta con il titolare.
+Presentare un caso concreto: «Quando ti cancellano un colore all’ultimo momento, quanto tempo impieghi a cercare qualcuno che possa venire?». Mostrare il buco di 90 minuti, confrontare un colore con taglio e piega, preparare un invito, registrare una sola conferma e mostrare l’agenda aggiornata. Dichiarare subito che il prototipo usa disponibilità di esempio e non invia messaggi. Il valore di listino non è un incasso recuperato.
 
-**Apertura del colloquio:** «Ho preparato un'esperienza su misura per Leandro Style. Vorrei mostrarti come gestire una prenotazione senza interrompere il lavoro e avere subito preferenze e storico del cliente. In sette minuti la proviamo con una giornata di esempio.»
-
-**Pilota di 30 giorni:** un salone, un referente, configurazione servizi/team, formazione breve e assistenza. Prima annotare per una settimana minuti spesi sulle prenotazioni, appuntamenti mancati e numero di richieste. Confrontare gli stessi indicatori durante il pilota e raccogliere feedback settimanale. Obiettivo di validazione: utilizzo dell'agenda da parte dello staff e almeno cinque prenotazioni completate dai clienti senza assistenza; nessuna promessa di incremento del fatturato.
+**Pilota di 30 giorni, dopo integrazione del backend:** un salone e un referente. Registrare numero di cancellazioni, minuti liberati, persone contattate, tempo impiegato e servizi effettivamente svolti. Confrontare con la gestione abituale; distinguere prenotato, svolto e incassato. Raccogliere anche proposte rifiutate e motivi. Il pilota deve verificare se il sistema fa risparmiare lavoro e aiuta a recuperare appuntamenti; nessuna promessa di incremento del fatturato. Non chiedere al salone di migrare tutta l’agenda prima di aver dimostrato il vantaggio su questo flusso.
 
 **Prezzo da testare, non validato dal mercato:** 290 € per configurazione/pilota e 59 €/mese per assistenza e utilizzo dopo il collaudo. Infrastruttura, messaggi a consumo, personalizzazioni e IVA ove dovuta vanno definiti separatamente. Non vendere ancora come SaaS multisalone: isolamento dati, billing, onboarding e supporto devono essere costruiti e verificati prima.
 
@@ -32,7 +30,7 @@ Dopo il pilota raccogliere una testimonianza autorizzata con un risultato misura
 
 ## Prima di un avvio reale
 
-Verificare autenticazione e permessi Appwrite con account admin/cliente, controlli server contro prenotazioni concorrenti, gestione degli orari reali, backup e ripristino, notifiche e deduplicazione dei promemoria. Pagamenti, acconti, lista d'attesa e riattivazione clienti sono sviluppi successivi: non presenti nella demo e non inclusi come funzioni pronte nell'offerta.
+Verificare autenticazione e permessi Appwrite con account admin/cliente, controlli server contro prenotazioni concorrenti, gestione degli orari reali, backup e ripristino, notifiche e deduplicazione dei promemoria. Pagamenti, acconti, riattivazione automatica e inviti con conferma online sono sviluppi successivi. Lista d’attesa e recupero sono presenti soltanto nella demo locale.
 
 ## Verifica
 
@@ -47,3 +45,11 @@ Lista d’attesa locale: richieste per cliente/servizio, intervallo di date, pro
 Schede cliente con telefono facoltativo, preferenze, formula colore, storico e fino a tre foto ottimizzate. Il caricamento richiede la conferma dell’autorizzazione del cliente. Modifiche salvate localmente e incluse nel backup; scheda raggiungibile dal dettaglio senza perdere la bozza dell’appuntamento. I backup precedenti restano compatibili.
 
 Queste nuove funzioni sono nella demo Studio e non scrivono nel database Appwrite. Collegamento persistente multisessione, promemoria e comunicazioni richiedono un successivo intervento sul backend.
+
+## Recupero cancellazioni — prototipo operativo
+
+Il caso di esempio annulla un colore e inserisce tre richieste locali con disponibilità esplicita. Il motore confronta sequenze fino a tre servizi nello spazio annullato; l’interfaccia mostra al massimo due alternative. Priorità: minuti coperti, quindi valore di listino, quindi minor numero di appuntamenti. Esclude data, professionista o finestra incompatibili, pausa, sovrapposizioni del professionista e appuntamenti contemporanei dello stesso cliente. Non inferisce disponibilità dallo storico e non stima probabilità di risposta.
+
+Gli inviti sono testi selezionabili; nessun invio reale. Solo le conferme selezionate vengono aggiunte all’agenda e rimosse dalla lista d’attesa. Al salvataggio si ripetono i controlli sull’intero piano, con rifiuto atomico in caso di conflitto. Annullamento e backup conservano lo stato locale. Nessun blocco condiviso del posto, garanzia contro concorrenza tra dispositivi, gestione delle postazioni o dei tempi di posa: richiedono un modello e un backend dedicati.
+
+`node --test src/studio/model.test.mjs src/studio/recovery.test.mjs` include confronti tra combinazioni, disponibilità, sovrapposizioni cliente, conferme parziali, conflitti sopraggiunti e rifiuto dei replay.

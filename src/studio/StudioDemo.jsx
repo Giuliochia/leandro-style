@@ -20,6 +20,9 @@ import Dialog from "./Dialog.jsx";
 import Agenda from "./Agenda.jsx";
 import Waitlist from "./Waitlist.jsx";
 import ClientProfile from "./ClientProfile.jsx";
+import Recovery from "./Recovery.jsx";
+import { applyRecovery } from "./recovery.mjs";
+import "./recovery.css";
 const money = (n) =>
   new Intl.NumberFormat("it-IT", {
     style: "currency",
@@ -32,6 +35,7 @@ const labels = {
   annullato: "Annullato",
 };
 const views = [
+  ["recovery", "Recupera", "chart"],
   ["agenda", "Agenda", "calendar"],
   ["clients", "Clienti", "people"],
   ["waitlist", "Lista d’attesa", "calendar"],
@@ -100,7 +104,7 @@ function initialState() {
 }
 export default function StudioDemo() {
   const [state, setState] = useState(initialState),
-    [view, setView] = useState("agenda"),
+    [view, setView] = useState("recovery"),
     [date, setDate] = useState(dayKey),
     [staff, setStaff] = useState("all"),
     [query, setQuery] = useState(""),
@@ -187,7 +191,9 @@ export default function StudioDemo() {
         </div>
         <nav aria-label="Navigazione principale">
           {views
-            .filter(([id]) => ["agenda", "clients", "services"].includes(id))
+            .filter(([id]) =>
+              ["recovery", "agenda", "clients", "services"].includes(id),
+            )
             .map(([id, label, icon]) => (
               <button
                 key={id}
@@ -272,6 +278,84 @@ export default function StudioDemo() {
               Il salvataggio nel browser non è riuscito. Esporta un backup dalla
               sezione Backup prima di chiudere questa pagina.
             </p>
+          )}
+          {view === "recovery" && (
+            <Recovery
+              state={state}
+              onAgenda={() => setView("agenda")}
+              onScenario={() => {
+                const target =
+                  state.appointments.find(
+                    (a) => a.service === "color" && a.status === "prenotato",
+                  ) || state.appointments.find((a) => a.status === "prenotato");
+                if (!target) {
+                  setToast(
+                    "Nessun appuntamento prenotato da usare per il caso demo.",
+                  );
+                  return null;
+                }
+                setUndo({
+                  appointments: state.appointments,
+                  waitlist: state.waitlist,
+                  date,
+                });
+                const demoRequests = [
+                  { id: "recovery-color", client: "c3", service: "color" },
+                  { id: "recovery-cut", client: "c7", service: "cut" },
+                  { id: "recovery-blow", client: "c8", service: "blow" },
+                ]
+                  .filter(
+                    (w) =>
+                      state.clients.some((c) => c.id === w.client) &&
+                      state.services.some((s) => s.id === w.service),
+                  )
+                  .map((w) => ({
+                    ...w,
+                    staff: target.staff,
+                    from: target.date,
+                    to: target.date,
+                    start: target.start,
+                    end: Math.min(
+                      1140,
+                      target.start +
+                        (state.services.find((s) => s.id === target.service)
+                          ?.minutes || 30),
+                    ),
+                  }));
+                setState((prev) => ({
+                  ...prev,
+                  appointments: prev.appointments.map((a) =>
+                    a.id === target.id ? { ...a, status: "annullato" } : a,
+                  ),
+                  waitlist: [
+                    ...prev.waitlist.filter(
+                      (w) => !demoRequests.some((d) => d.id === w.id),
+                    ),
+                    ...demoRequests,
+                  ],
+                }));
+                setDate(target.date);
+                setToast(
+                  "Cancellazione di esempio caricata. Nessun cliente contattato.",
+                );
+                return target.id;
+              }}
+              onApply={(lostId, items) => {
+                const result = applyRecovery(state, lostId, items, () =>
+                  crypto.randomUUID(),
+                );
+                if (result.error) return result.error;
+                setUndo({
+                  appointments: state.appointments,
+                  waitlist: state.waitlist,
+                  date,
+                });
+                setState(result.state);
+                setDate(items[0].date);
+                setToast("Conferme registrate nella demo");
+                return "";
+              }}
+            />
           )}
           {view === "agenda" && (
             <Agenda
