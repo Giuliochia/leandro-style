@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { databases } from '../../appwrite/client'
 import { DB_ID, COLLECTIONS } from '../../appwrite/config'
 import { Query } from 'appwrite'
 import { useOperatori } from '../../hooks/useOperatori'
 import Spinner from '../../components/shared/Spinner'
-import { STATI_CLASS, STATI_LABEL, formatOra } from '../../utils/appuntamenti'
+import { STATI_LABEL, formatOra } from '../../utils/appuntamenti'
 import { format, isToday, isTomorrow, startOfDay, endOfDay, addDays } from 'date-fns'
 import { it } from 'date-fns/locale'
 
@@ -16,14 +16,11 @@ export default function AdminDashboard() {
   const [prossimi, setProssimi] = useState([])
   const [nomiClienti, setNomiClienti] = useState({})
   const [loading, setLoading] = useState(true)
+  const [errore, setErrore] = useState(false)
 
-  useEffect(() => {
-    if (!operatori.length) return
-    caricaDati()
-  }, [operatori])
-
-  const caricaDati = async () => {
+  const caricaDati = useCallback(async () => {
     setLoading(true)
+    setErrore(false)
     try {
       const now = new Date()
       const fineOggi = endOfDay(now)
@@ -57,12 +54,21 @@ export default function AdminDashboard() {
       setNomiClienti(map)
     } catch (e) {
       console.error(e)
+      setErrore(true)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (loadingOp) return
+    const timer = setTimeout(caricaDati, 0)
+    return () => clearTimeout(timer)
+  }, [loadingOp, caricaDati])
 
   if (loadingOp || loading) return <div className="page-center"><Spinner /></div>
+
+  if (errore) return <div className="admin-dashboard-error" role="alert"><p>Non è stato possibile caricare gli appuntamenti.</p><button className="btn btn--primary" onClick={caricaDati}>Riprova</button></div>
 
   const operatoreNome = (id) => operatori.find(o => o.$id === id)?.nome || ''
   const dataOggi = format(new Date(), "EEEE d MMMM", { locale: it })
@@ -86,7 +92,7 @@ export default function AdminDashboard() {
           <div className="admin-stat__divider" />
           <div className="admin-stat">
             <span className="admin-stat__val">{prossimi.length}</span>
-            <span className="admin-stat__label">Settimana</span>
+            <span className="admin-stat__label">Prossimi 7 giorni · max 30</span>
           </div>
         </div>
       </div>

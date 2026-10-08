@@ -1,0 +1,805 @@
+/* V2: more readable working surfaces, with one staff column on small screens. */
+.ls-heading h1 {
+  font-size: 30px;
+}
+.ls-heading {
+  margin-bottom: 20px;
+}
+.ls-heading p:not(.ls-eyebrow) {
+  font-size: 13px;
+}
+.ls-eyebrow {
+  color: #69715f;
+}
+.ls-metrics {
+  padding: 16px 0;
+  margin-bottom: 20px;
+}
+.ls-metrics span {
+  font-size: 11px;
+  color: #5a6456;
+}
+.ls-metrics small {
+  font-size: 10px;
+  color: #687260;
+}
+.ls-metrics strong {
+  font-size: 27px;
+}
+.ls-page-footer,
+.ls-agenda-footer {
+  color: #66725e;
+}
+.ls-primary:disabled,
+.ls-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.ls-agenda-view-switch {
+  display: flex;
+  padding: 3px;
+  border: 1px solid #dbe0d2;
+  border-radius: 5px;
+  background: #eef0e7;
+  gap: 3px;
+}
+.ls-agenda-view-switch button,
+.ls-team-tabs button,
+.ls-profile-tabs button {
+  border: 0;
+  background: none;
+  font-size: 11px;
+  color: #78826f;
+  padding: 8px 16px;
+  border-radius: 3px;
+}
+.ls-agenda-view-switch button[aria-pressed="true"] {
+  background: white;
+  color: #2f412b;
+  box-shadow: 0 1px 3px #1f361515;
+}
+.ls-team-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #dfe4d6;
+  padding-bottom: 14px;
+  overflow: auto;
+}
+.ls-team-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  padding: 8px 12px;
+}
+.ls-team-tabs button[aria-pressed="true"] {
+  background: #e8ecdf;
+  border-color: #d6deca;
+  color: #31402e;
+}
+.ls-team-tabs i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.ls-team-tabs small {
+  font-size: 9px;
+  opacity: 0.7;
+}
+.ls-day-focus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 17px 0 20px;
+}
+.ls-day-focus .ls-eyebrow {
+  display: block;
+  font-size: 8px;
+  margin: 0 0 5px;
+}
+.ls-day-focus > div > button {
+  background: none;
+  border: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #3a4b32;
+  font-size: 12px;
+  text-align: left;
+}
+.ls-day-focus strong {
+  font-weight: 600;
+}
+.ls-day-focus button > span:not(.ls-eyebrow) {
+  font-size: 10px;
+  color: #6d7a5f;
+  margin-left: 5px;
+}
+.ls-day-focus p {
+  font-size: 11px;
+  margin: 0;
+  color: #849076;
+}
+.ls-gap-notice {
+  border: 1px solid #d4ddc7;
+  background: #edf1e5;
+  border-radius: 4px;
+  font-size: 10px !important;
+  color: #5d704c;
+  padding: 12px;
+  max-width: 260px;
+  text-align: left;
+}
+.ls-gap-notice strong {
+  font-size: 14px;
+  margin-right: 3px;
+}
+.ls-gap-notice > span {
+  margin-left: 5px;
+}
+.ls-agenda-v2 .ls-calendar {
+  min-width: 620px;
+  grid-template-columns: 60px repeat(var(--staff-count), minmax(150px, 1fr));
+}
+.ls-agenda-v2 .ls-hours,
+.ls-agenda-v2 .ls-track {
+  height: 1200px;
+}
+.ls-agenda-v2 .ls-track {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 59px,
+    #f0f3e9 59px,
+    #f0f3e9 60px,
+    transparent 60px,
+    transparent 119px,
+    #e4e9db 119px,
+    #e4e9db 120px
+  );
+}
+.ls-agenda-v2 .ls-lunch {
+  top: 480px;
+  height: 120px;
+}
+.ls-agenda-v2 .ls-appointment {
+  padding: 6px 10px;
+  gap: 1px;
+}
+.ls-agenda-v2 .ls-event-time {
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0;
+}
+.ls-agenda-v2 .ls-appointment strong {
+  font-size: 13px;
+  line-height: 16px;
+}
+.ls-agenda-v2 .ls-appointment > span:last-of-type {
+  font-size: 10px;
+  line-height: 13px;
+}
+.ls-agenda-v2 .ls-appointment small {
+  font-size: 9px;
+  color: #5d6e50;
+}
+.ls-agenda-v2 .ls-appointment.is-complete {
+  color: #606e54;
+  background: #f0f3e8;
+}
+.ls-agenda-v2 .ls-appointment.is-next {
+  outline: 1px solid color-mix(in srgb, var(--event-color) 50%, transparent);
+  outline-offset: 1px;
+}
+.ls-appointment[draggable="true"] {
+  cursor: grab;
+}
+.ls-appointment[draggable="true"]:active {
+  cursor: grabbing;
+}
+.ls-track.is-dropping {
+  background-color: #f5f7ef;
+}
+.ls-free-slot {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+  padding: 12px;
+  border: 1px dashed #dce4d0;
+  background: #f9fbf540;
+  border-radius: 3px;
+  color: #a0ad90;
+  font-size: 10px !important;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.ls-free-slot:hover,
+.ls-free-slot:focus-visible {
+  background: #edf3e2;
+  border-color: #899f6e;
+  color: #597044;
+}
+.ls-free-slot small {
+  font-size: 9px;
+  color: #89987a;
+}
+.ls-now-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #b66542;
+  pointer-events: none;
+  z-index: 3;
+}
+.ls-now-line i {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #b66542;
+  left: -3px;
+  top: -3px;
+}
+.ls-day-list {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.ls-list-appointment {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid #dce3d2;
+  border-left: 3px solid var(--event-color);
+  border-radius: 4px;
+  background: #fff;
+  padding: 17px;
+  text-align: left;
+  color: #37482c;
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+.ls-list-appointment:hover {
+  transform: translateY(-2px);
+  background: #f4f7ed;
+}
+.ls-list-appointment strong {
+  font-size: 16px;
+  font-weight: 500;
+}
+.ls-list-appointment > span:last-of-type {
+  font-size: 12px;
+  color: #6a785c;
+}
+.ls-list-appointment small {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #79866b;
+}
+.ls-list-appointment.is-complete {
+  background: #edf1e5;
+}
+.ls-list-appointment.is-next {
+  box-shadow: 0 0 0 1px #83976b;
+}
+.ls-empty-state {
+  padding: 30px;
+  border: 1px dashed #d7dfca;
+  border-radius: 4px;
+  color: #71835a;
+  grid-column: 1/-1;
+}
+.ls-empty-state h2 {
+  font-family: Georgia, serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #455835;
+  margin-bottom: 10px;
+}
+.ls-empty-state p {
+  font-size: 12px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.ls-profile-link {
+  background: none;
+  border: 0;
+  padding: 5px 0 14px;
+  color: #7e6248;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px !important;
+}
+.ls-undo {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #f4f7ea;
+  color: #4f6240;
+  border: 1px solid #cbd8b7;
+  padding: 12px 18px;
+  border-radius: 5px;
+  box-shadow: 0 7px 22px #28332320;
+  z-index: 21;
+  font-size: 10px;
+  max-width: 95vw;
+  white-space: nowrap;
+}
+.ls-undo button {
+  border: 0;
+  background: none;
+  color: #3c5629;
+  text-decoration: underline;
+  font-size: 11px;
+}
+.ls-undo + .ls-toast {
+  bottom: 80px;
+}
+.ls-wait-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin: 20px 0;
+  gap: 20px;
+}
+.ls-wait-toolbar label {
+  font-size: 10px;
+  color: #6f7e5d;
+}
+.ls-wait-toolbar input {
+  display: block;
+  font: inherit;
+  font-size: 12px;
+  color: #415930;
+  border: 1px solid #d9e1cd;
+  border-radius: 3px;
+  background: white;
+  margin-top: 6px;
+  padding: 10px;
+}
+.ls-wait-explainer {
+  display: flex;
+  gap: 17px;
+  background: #e9efdf;
+  border-left: 2px solid #809b60;
+  padding: 20px;
+  margin-bottom: 24px;
+  color: #61754c;
+}
+.ls-wait-symbol {
+  font-size: 28px;
+  line-height: 1.1;
+}
+.ls-wait-explainer p {
+  font-size: 11px;
+  line-height: 1.8;
+  margin: 0;
+}
+.ls-wait-explainer strong {
+  font-weight: 500;
+  color: #3b5728;
+}
+.ls-wait-card {
+  border-top: 1px solid #d7dfcb;
+  padding: 24px 0;
+  animation: ls-enter 0.3s both;
+}
+.ls-wait-person {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.ls-wait-person h2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+.ls-wait-person p {
+  font-size: 11px;
+  color: #758662;
+  margin: 0;
+}
+.ls-wait-person > button {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  font-size: 23px;
+  color: #91a07c;
+}
+.ls-wait-preferences {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 18px 0;
+}
+.ls-wait-preferences span {
+  padding: 4px 8px;
+  background: #ebefe1;
+  font-size: 9px;
+  color: #778862;
+  border-radius: 3px;
+}
+.ls-wait-match {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.ls-wait-match label {
+  font-size: 10px;
+  color: #768966;
+  flex: 1;
+}
+.ls-wait-match select {
+  display: block;
+  width: 100%;
+  max-width: 430px;
+  font: inherit;
+  font-size: 12px;
+  border: 1px solid #d5e0c6;
+  border-radius: 3px;
+  background: #fff;
+  color: #486331;
+  padding: 10px;
+  margin-top: 7px;
+}
+.ls-wait-match p {
+  font-size: 12px;
+  color: #8a977c;
+}
+.ls-client-hero {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 24px;
+}
+.ls-client-hero > .ls-avatar {
+  width: 50px;
+  height: 50px;
+  font-size: 16px;
+}
+.ls-client-hero h2 {
+  font-size: 26px;
+  margin-bottom: 7px;
+}
+.ls-client-hero p {
+  font-size: 10px;
+  color: #7c8b6d;
+  margin: 0;
+}
+.ls-profile-tabs {
+  display: flex;
+  border-bottom: 1px solid #dce3d1;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+.ls-profile-tabs button {
+  border-radius: 0;
+  padding: 10px 12px;
+}
+.ls-profile-tabs button[aria-pressed="true"] {
+  color: #314f20;
+  border-bottom: 2px solid #779856;
+}
+.ls-profile-section,
+.ls-profile-history,
+.ls-profile-photos {
+  animation: ls-enter 0.25s both;
+}
+.ls-profile-history {
+  border-left: 1px solid #d5dfc6;
+  margin: 25px 0;
+  padding-left: 22px;
+}
+.ls-profile-history article {
+  position: relative;
+  margin-bottom: 25px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e0e8d4;
+}
+.ls-profile-history article:before {
+  content: "";
+  position: absolute;
+  left: -26px;
+  top: 4px;
+  width: 7px;
+  height: 7px;
+  background: #afbd99;
+  border-radius: 50%;
+  border: 2px solid #fafbf6;
+}
+.ls-profile-history time {
+  font-size: 9px;
+  color: #889975;
+}
+.ls-profile-history h3 {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 8px 0;
+}
+.ls-profile-history p {
+  font-size: 10px;
+  color: #71885a;
+}
+.ls-profile-photos > p {
+  font-size: 11px;
+  color: #7c8e66;
+  line-height: 1.7;
+}
+.ls-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+.ls-photo-grid figure {
+  margin: 0;
+}
+.ls-photo-grid img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.ls-photo-grid figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 9px;
+  color: #92a17d;
+  margin-top: 5px;
+}
+.ls-photo-grid figcaption button {
+  background: none;
+  border: 0;
+  color: #768963;
+  font-size: 18px;
+}
+.ls-dialog .ls-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 10px;
+  line-height: 1.7;
+}
+.ls-dialog .ls-consent input {
+  display: inline-block;
+  width: auto;
+  flex-shrink: 0;
+  margin-top: 3px;
+  accent-color: #526f39;
+}
+.ls-photo-upload {
+  background: #eef3e6;
+  border: 1px dashed #b7c6a3;
+  border-radius: 4px;
+  padding: 15px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+.ls-photo-upload:focus-within {
+  outline: 2px solid #a76545;
+}
+.ls-photo-upload input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.ls-photo-upload:has(input:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (max-width: 1050px) {
+  .ls-day-focus {
+    align-items: flex-start;
+  }
+  .ls-day-focus > div > button {
+    flex-wrap: wrap;
+  }
+  .ls-gap-notice {
+    max-width: 210px;
+  }
+}
+@media (max-width: 720px) {
+  .ls-heading h1 {
+    font-size: 27px;
+    max-width: none;
+  }
+  .ls-heading p:not(.ls-eyebrow) {
+    font-size: 12px;
+  }
+  .ls-heading {
+    margin-bottom: 16px;
+  }
+  .ls-heading > .ls-primary {
+    margin-top: 14px;
+  }
+  .ls-studio .ls-metrics {
+    padding: 13px 0;
+    gap: 0;
+    grid-template-columns: 1fr 1fr;
+  }
+  .ls-metrics > div {
+    padding: 0 16px !important;
+  }
+  .ls-metrics > div:first-child {
+    padding-left: 0 !important;
+  }
+  .ls-metrics > div:nth-child(2) {
+    padding-right: 0 !important;
+  }
+  .ls-metrics > div:nth-child(3),
+  .ls-metrics > div:nth-child(4) {
+    display: none;
+  }
+  .ls-metrics strong {
+    font-size: 25px;
+  }
+  .ls-sidebar nav {
+    gap: 0;
+  }
+  .ls-sidebar nav button {
+    font-size: 10px;
+    padding: 9px 7px;
+    gap: 5px;
+  }
+  .ls-sidebar nav button svg {
+    width: 13px;
+  }
+  .ls-day-focus {
+    display: block;
+    padding: 16px 0;
+  }
+  .ls-day-focus > div > button {
+    font-size: 13px;
+  }
+  .ls-day-focus > div > button > span {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+  .ls-gap-notice {
+    margin-top: 13px;
+    width: 100%;
+    max-width: none;
+    padding: 11px;
+  }
+  .ls-agenda-v2 .ls-agenda-toolbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .ls-agenda-v2 .ls-day-controls {
+    width: auto;
+    gap: 5px;
+  }
+  .ls-agenda-v2 .ls-day-controls input {
+    font-size: 11px;
+    padding: 5px;
+    width: 124px;
+  }
+  .ls-agenda-view-switch button {
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+  .ls-team-tabs {
+    gap: 6px;
+    justify-content: space-between;
+  }
+  .ls-team-tabs button {
+    flex: 1;
+    justify-content: center;
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+  .ls-agenda-v2 .ls-calendar-wrap {
+    margin: 0 -18px;
+  }
+  .ls-agenda-v2 .ls-calendar {
+    min-width: 0;
+    grid-template-columns: 46px minmax(0, 1fr);
+  }
+  .ls-agenda-v2 .ls-staff-head {
+    padding: 12px 15px;
+    font-size: 13px;
+  }
+  .ls-agenda-v2 .ls-staff-head small {
+    font-size: 10px;
+  }
+  .ls-agenda-v2 .ls-appointment {
+    left: 9px;
+    right: 12px;
+  }
+  .ls-agenda-v2 .ls-appointment strong {
+    font-size: 14px;
+  }
+  .ls-agenda-v2 .ls-appointment > span:last-of-type {
+    font-size: 11px;
+  }
+  .ls-free-slot {
+    right: 12px;
+    font-size: 11px !important;
+  }
+  .ls-day-list {
+    grid-template-columns: 1fr;
+  }
+  .ls-list-appointment {
+    padding: 16px;
+  }
+  .ls-undo {
+    gap: 12px;
+    font-size: 9px;
+    padding: 11px 12px;
+  }
+  .ls-undo button {
+    font-size: 10px;
+  }
+  .ls-wait-toolbar {
+    align-items: center;
+    gap: 12px;
+  }
+  .ls-wait-toolbar .ls-primary {
+    font-size: 10px !important;
+    padding: 10px;
+  }
+  .ls-wait-match {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .ls-wait-match button {
+    width: 100%;
+  }
+  .ls-wait-explainer {
+    padding: 16px;
+  }
+  .ls-client-hero h2 {
+    font-size: 25px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ls-agenda-v2 *,
+  .ls-waitlist *,
+  .ls-profile-section,
+  .ls-profile-history,
+  .ls-profile-photos {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.ls-agenda-v2 .ls-appointment {
+  transition:
+    top 0.26s ease,
+    height 0.26s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+.ls-free-slot:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ls-agenda-v2 .ls-appointment {
+    transition: none !important;
+  }
+}

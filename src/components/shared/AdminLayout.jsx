@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import '../../styles/admin-studio.css'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { usePushNotifications } from '../../hooks/usePushNotifications'
@@ -67,31 +67,19 @@ const IconSettings = ({ filled }) => (
   </svg>
 )
 
-const IconEye = ({ filled }) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
-      fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="12" cy="12" r="3"
-      fill={filled ? 'var(--color-bg-card)' : 'none'} stroke={filled ? 'none' : 'currentColor'} strokeWidth="1.5"/>
-  </svg>
-)
-
 const navItems = [
   { to: '/admin',            label: 'Dashboard', Icon: IconHome,     end: true },
   { to: '/admin/agenda',     label: 'Agenda',    Icon: IconCalendar         },
   { to: '/admin/clienti',    label: 'Clienti',   Icon: IconUsers            },
+  { to: '/admin/operatori', label: 'Team', Icon: IconUsers },
   { to: '/admin/servizi',    label: 'Servizi',   Icon: IconScissors         },
-  { to: '/admin/impostazioni', label: 'Impostaz.', Icon: IconSettings       },
+  { to: '/admin/impostazioni', label: 'Impostazioni', Icon: IconSettings       },
 ]
 
 export default function AdminLayout() {
   const { logout } = useAuth()
   const navigate = useNavigate()
   const { permesso, chiediPermesso } = usePushNotifications('admin')
-
-  useEffect(() => {
-    if (permesso === 'default') chiediPermesso()
-  }, [])
 
   const handleLogout = async () => {
     await logout()
@@ -102,7 +90,10 @@ export default function AdminLayout() {
     <div className="app-layout app-layout--admin">
       <header className="topbar">
         <span className="topbar__brand">Leandro's Style</span>
-        <button className="topbar__logout" onClick={handleLogout}>Esci</button>
+        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+          {permesso === "default" && <button className="topbar__logout" onClick={chiediPermesso}>Attiva notifiche</button>}
+          <button className="topbar__logout" onClick={handleLogout}>Esci</button>
+        </div>
       </header>
       <main className="app-layout__content">
         <Outlet />

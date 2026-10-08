@@ -1,0 +1,202 @@
+/* Admin workspace: the customer-facing layout keeps its existing theme. */
+.app-layout--admin {
+  padding-left: 218px;
+}
+.app-layout--admin .topbar {
+  left: 218px;
+  height: 65px;
+  background: #111713;
+  border-bottom: 1px solid #26322a;
+  padding: 0 30px;
+}
+.app-layout--admin .topbar__brand {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.app-layout--admin .app-layout__content {
+  padding-top: 65px;
+}
+.app-layout--admin .bottom-nav {
+  width: 218px;
+  height: 100dvh;
+  top: 0;
+  bottom: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  background: #18201a;
+  border-right: 1px solid #2d382f;
+  padding: 150px 15px 24px;
+  gap: 8px;
+}
+.app-layout--admin .bottom-nav:before {
+  content: "LEANDRO / STYLE";
+  position: absolute;
+  top: 46px;
+  left: 28px;
+  letter-spacing: 2px;
+  font-family: Georgia, serif;
+  font-size: 16px;
+  color: #e7e8dc;
+}
+.app-layout--admin .bottom-nav:after {
+  content: "SALON WORKSPACE";
+  position: absolute;
+  top: 85px;
+  left: 28px;
+  letter-spacing: 2px;
+  font-size: 8px;
+  color: #9aa590;
+}
+.app-layout--admin .bottom-nav__item {
+  flex: 0;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 13px;
+  border-radius: 4px;
+  color: #96a28e;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.app-layout--admin .bottom-nav__item--active {
+  background: #33412f;
+  color: #e8ecde;
+}
+.app-layout--admin .bottom-nav__label {
+  font-size: 11px;
+}
+.app-layout--admin .bottom-nav__icon svg {
+  width: 19px;
+  height: 19px;
+}
+.app-layout--admin .admin-hero {
+  background: none;
+  border-bottom: 1px solid #2d3829;
+  border-radius: 0;
+  margin: 25px 30px 0;
+  padding: 22px 0;
+  box-shadow: none;
+}
+.app-layout--admin .admin-hero__glow {
+  display: none;
+}
+.app-layout--admin .admin-hero__title {
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: -0.8px;
+}
+.app-layout--admin .admin-hero__eyebrow {
+  letter-spacing: 2px;
+  font-size: 9px;
+}
+.app-layout--admin .admin-body {
+  padding: 28px 30px;
+  max-width: 1200px;
+}
+.app-layout--admin .admin-card {
+  border-radius: 4px;
+  background: #141c15;
+  border-color: #293225;
+  box-shadow: none;
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+.app-layout--admin .admin-card:hover {
+  transform: translateY(-2px);
+  background: #1c271b;
+}
+.app-layout--admin .admin-card__date {
+  border-radius: 3px;
+  background: #293523;
+}
+.app-layout--admin .admin-section__title {
+  font-size: 15px;
+  font-weight: 500;
+}
+.app-layout--admin .admin-stat__val {
+  font-weight: 400;
+}
+.app-layout--admin .admin-card__nome {
+  font-weight: 500;
+}
+.admin-dashboard-error {
+  margin: 40px;
+  color: #ddd;
+}
+.admin-dashboard-error button {
+  margin-top: 15px;
+}
+@media (min-width: 1000px) {
+  .app-layout--admin .admin-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+  }
+  .app-layout--admin .admin-section {
+    min-width: 0;
+  }
+}
+@media (max-width: 720px) {
+  .app-layout--admin {
+    padding-left: 0;
+  }
+  .app-layout--admin .topbar {
+    left: 0;
+    height: 58px;
+    padding: 0 20px;
+  }
+  .app-layout--admin .app-layout__content {
+    padding-top: 58px;
+  }
+  .app-layout--admin .bottom-nav {
+    width: 100%;
+    height: 70px;
+    top: auto;
+    bottom: 0;
+    flex-direction: row;
+    padding: 5px 0;
+    gap: 0;
+    border-right: 0;
+    border-top: 1px solid #2d3829;
+  }
+  .app-layout--admin .bottom-nav:before,
+  .app-layout--admin .bottom-nav:after {
+    display: none;
+  }
+  .app-layout--admin .bottom-nav__item {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px;
+    border-radius: 0;
+  }
+  .app-layout--admin .bottom-nav__label {
+    font-size: 8px;
+  }
+  .app-layout--admin .admin-hero {
+    margin: 12px 20px 0;
+  }
+  .app-layout--admin .admin-hero__title {
+    font-size: 29px;
+  }
+  .app-layout--admin .admin-body {
+    padding: 25px 20px;
+  }
+  .app-layout--admin .admin-card__nome {
+    font-size: 13px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-layout--admin * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

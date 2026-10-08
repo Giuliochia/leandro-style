@@ -1,0 +1,1287 @@
+.ls-studio {
+  --ink: #202724;
+  --muted: #737a75;
+  --paper: #f5f5f1;
+  --line: #e0e3dc;
+  --accent: #a76545;
+  font-family: Inter, Arial, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.ls-studio * {
+  box-sizing: border-box;
+}
+.ls-studio button,
+.ls-dialog button {
+  font: inherit;
+  cursor: pointer;
+}
+.ls-studio button:focus-visible,
+.ls-dialog button:focus-visible,
+.ls-studio input:focus-visible,
+.ls-dialog input:focus-visible,
+.ls-dialog select:focus-visible,
+.ls-dialog textarea:focus-visible {
+  outline: 2px solid #a76545;
+  outline-offset: 3px;
+}
+.ls-sidebar {
+  background: #202824;
+  color: #f2f0e9;
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  padding: 34px 24px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.ls-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  letter-spacing: 3px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.ls-brand img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+.ls-brand b {
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 6px;
+}
+.ls-workspace {
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  color: #b5bdb5;
+  margin: 38px 0 24px;
+}
+.ls-workspace span {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0;
+  margin-top: 7px;
+  color: #8f9b92;
+}
+.ls-sidebar nav {
+  display: grid;
+  gap: 8px;
+}
+.ls-sidebar nav button {
+  border: 0;
+  background: none;
+  color: #aeb8af;
+  padding: 13px 12px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-align: left;
+  border-radius: 5px;
+  font-size: 13px;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.ls-sidebar nav button:hover {
+  background: #ffffff0a;
+  color: #fff;
+}
+.ls-sidebar nav button.is-active {
+  background: #39433a;
+  color: #fff;
+}
+.ls-sidebar nav button i {
+  margin-left: auto;
+  width: 5px;
+  height: 5px;
+  background: #caab83;
+  border-radius: 50%;
+}
+.ls-side-bottom {
+  margin-top: auto;
+}
+.ls-booking-link {
+  width: 100%;
+  border: 1px solid #475147;
+  background: none;
+  color: #d0d7cc;
+  font-size: 11px !important;
+  padding: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  border-radius: 5px;
+}
+.ls-account {
+  margin-top: 26px;
+  border-top: 1px solid #3c463d;
+  padding-top: 23px;
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+}
+.ls-avatar {
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e6e8df;
+  color: #4e594e;
+  font-size: 11px;
+  border-radius: 50%;
+  font-weight: 600;
+}
+.ls-account small {
+  display: block;
+  color: #929e94;
+  font-size: 10px;
+  margin-top: 3px;
+}
+.ls-main {
+  min-width: 0;
+}
+.ls-topbar {
+  height: 65px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 42px;
+  font-size: 11px;
+  color: var(--muted);
+  background: #fafaf7;
+}
+.ls-slash {
+  margin: 0 15px;
+  color: #bac1b9;
+}
+.ls-demo {
+  letter-spacing: 0.8px;
+  font-size: 9px;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.ls-demo i,
+.ls-live-dot {
+  width: 5px;
+  height: 5px;
+  background: #758b6f;
+  border-radius: 50%;
+  display: inline-block;
+}
+.ls-page {
+  padding: 34px 42px 20px;
+  max-width: 1650px;
+  margin: auto;
+  animation: ls-enter 0.4s both;
+}
+.ls-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 27px;
+}
+.ls-eyebrow {
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  font-weight: 600;
+  color: #848979;
+  margin: 0 0 10px;
+}
+.ls-heading h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 32px;
+  letter-spacing: -1.1px;
+  line-height: 1.25;
+  font-weight: 400;
+  margin: 0 0 10px;
+  color: #222b23;
+}
+.ls-heading p:not(.ls-eyebrow) {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+.ls-primary,
+.ls-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 12px 16px;
+  font-size: 11px !important;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+.ls-primary {
+  background: #28362b;
+  color: #fff;
+}
+.ls-primary:hover {
+  background: #40533f;
+  transform: translateY(-1px);
+}
+.ls-secondary {
+  border-color: #d9ddd3;
+  background: #fff;
+  color: #39433a;
+}
+.ls-secondary:hover {
+  background: #eff1e9;
+}
+.ls-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 22px 0;
+  margin-bottom: 25px;
+}
+.ls-metrics > div {
+  padding: 0 24px;
+  border-right: 1px solid var(--line);
+}
+.ls-metrics > div:first-child {
+  padding-left: 0;
+}
+.ls-metrics > div:last-child {
+  border: 0;
+}
+.ls-metrics span {
+  display: block;
+  font-size: 10px;
+  color: #6e776c;
+}
+.ls-metrics strong {
+  font-size: 29px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  display: block;
+  margin-top: 5px;
+  font-variant-numeric: tabular-nums;
+}
+.ls-metrics em {
+  font-size: 16px;
+  font-style: normal;
+  margin: 0 2px;
+  color: #80897d;
+}
+.ls-metrics small {
+  display: block;
+  color: #848b81;
+  font-size: 9px;
+  margin-top: 4px;
+}
+.ls-meter {
+  height: 3px;
+  background: #dce0d4;
+  width: 100%;
+  max-width: 145px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+.ls-meter i {
+  display: block;
+  height: 100%;
+  background: #809471;
+  animation: ls-bar 0.8s ease both;
+  transform-origin: left;
+}
+.ls-agenda-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 17px;
+  gap: 12px;
+}
+.ls-day-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ls-day-controls button {
+  height: 32px;
+  min-width: 30px;
+  background: #fff;
+  border: 1px solid #dfe3d9;
+  border-radius: 4px;
+  color: #69735e;
+  font-size: 14px;
+}
+.ls-day-controls button:last-child {
+  font-size: 10px;
+  padding: 0 10px;
+  margin-left: 8px;
+}
+.ls-day-controls input {
+  font: inherit;
+  font-size: 12px;
+  padding: 6px 10px;
+  border: 0;
+  background: none;
+  color: #344031;
+}
+.ls-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  color: #7c8277;
+}
+.ls-filters select {
+  background: #fff;
+  border: 1px solid #dde1d7;
+  padding: 8px 12px;
+  font-size: 10px;
+  color: #52614f;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+.ls-calendar-wrap {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: auto;
+}
+.ls-calendar {
+  display: grid;
+  grid-template-columns: 64px repeat(var(--staff-count), minmax(200px, 1fr));
+  min-width: 680px;
+}
+.ls-hours-head {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #8e958a;
+  border-bottom: 1px solid var(--line);
+}
+.ls-staff-head {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding: 15px 19px;
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 500;
+}
+.ls-staff-head small {
+  font-size: 9px;
+  display: block;
+  color: #8c9385;
+  font-weight: 400;
+  margin-top: 3px;
+}
+.ls-staff-count {
+  margin-left: auto;
+  font-size: 10px;
+  color: #8c9683;
+  padding: 3px 7px;
+  background: #f4f5ef;
+  border-radius: 3px;
+}
+.ls-hours {
+  height: 720px;
+  position: relative;
+}
+.ls-hours > span {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 9px;
+  color: #8e958b;
+  transform: translateY(-6px);
+}
+.ls-hours > span:first-child {
+  transform: translateY(5px);
+}
+.ls-track {
+  height: 720px;
+  position: relative;
+  border-left: 1px solid var(--line);
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 35px,
+    #f3f4ef 35px,
+    #f3f4ef 36px,
+    transparent 36px,
+    transparent 71px,
+    #e9ece4 71px,
+    #e9ece4 72px
+  );
+}
+.ls-lunch {
+  position: absolute;
+  top: 288px;
+  height: 72px;
+  left: 0;
+  right: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    #f6f7f2,
+    #f6f7f2 5px,
+    #eef0e9 5px,
+    #eef0e9 6px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  letter-spacing: 0.6px;
+  color: #9aa28f;
+}
+.ls-appointment {
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  border: 0;
+  border-left: 2px solid var(--event-color);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--event-color) 14%, #fff);
+  color: #303b2c;
+  text-align: left;
+  padding: 8px 11px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition:
+    filter 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+  animation: ls-event 0.5s both;
+}
+.ls-appointment:hover {
+  filter: brightness(0.98);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 16px #26372516;
+  z-index: 2;
+}
+.ls-appointment.is-complete {
+  background: #f2f3ee;
+  border-color: #b5c0a9;
+  color: #757e6d;
+}
+.ls-event-time {
+  font-size: 8px;
+  letter-spacing: 0.2px;
+  display: flex;
+  justify-content: space-between;
+}
+.ls-appointment strong {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.ls-appointment > span:last-of-type {
+  font-size: 9px;
+}
+.ls-appointment small {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: #7b856f;
+}
+.ls-appointment[style*="height: 32px"] {
+  padding: 3px 8px;
+  gap: 0;
+}
+.ls-appointment[style*="height: 32px"] strong {
+  font-size: 10px;
+}
+.ls-appointment[style*="height: 32px"] > span:last-of-type {
+  display: none;
+}
+.ls-agenda-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #8a9281;
+  padding: 12px 0;
+}
+.ls-agenda-footer i {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: #b18c71;
+  border-radius: 50%;
+  margin: 0 6px;
+}
+.ls-agenda-footer i.muted {
+  background: #bbc2b3;
+}
+.ls-page-footer {
+  margin-top: 28px;
+  border-top: 1px solid var(--line);
+  padding: 18px 0 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 8px;
+  color: #8d9487;
+  letter-spacing: 0.2px;
+}
+.ls-page-footer > span:first-child {
+  letter-spacing: 2px;
+}
+.ls-page-footer b {
+  font-weight: 400;
+  color: #57624f;
+  margin-left: 5px;
+}
+.ls-list-tools {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0 24px;
+  gap: 15px;
+}
+.ls-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ls-search input {
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 12px;
+  color: #394537;
+  padding: 10px 0;
+  min-width: 230px;
+}
+.ls-client-list {
+  border-top: 1px solid var(--line);
+}
+.ls-client-list > button {
+  width: 100%;
+  display: flex;
+  gap: 17px;
+  align-items: center;
+  padding: 21px 8px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  text-align: left;
+  color: #273b2a;
+  transition: background 0.2s;
+}
+.ls-client-list > button:hover {
+  background: #e9ece1;
+}
+.ls-client-list > button > div {
+  flex: 1;
+}
+.ls-client-list strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+.ls-client-list small {
+  display: block;
+  color: #89917f;
+  font-size: 10px;
+  margin-top: 4px;
+}
+.ls-client-list > button > span:not(.ls-avatar) {
+  font-size: 10px;
+  color: #819077;
+}
+.ls-service-list > button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 25px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 25px 0;
+  background: none;
+  color: #344530;
+  text-align: left;
+  transition: padding 0.2s;
+}
+.ls-service-list > button:hover {
+  padding-left: 12px;
+}
+.ls-service-number {
+  font-size: 10px;
+  color: #8d9a81;
+}
+.ls-service-list h2 {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: 24px;
+  margin: 0 0 4px;
+}
+.ls-service-list p {
+  margin: 0;
+  font-size: 10px;
+  color: #839176;
+}
+.ls-service-list strong {
+  margin-left: auto;
+  font-size: 25px;
+  font-weight: 400;
+}
+.ls-service-list button > span:last-child {
+  font-size: 9px;
+  margin-left: 25px;
+  color: #7d8c71;
+}
+.ls-insights {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 50px;
+  padding: 20px 0;
+}
+.ls-insights h2 {
+  font-family: Georgia, serif;
+  font-size: 29px;
+  font-weight: 400;
+  margin: 0 0 30px;
+}
+.ls-team-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 25px 0;
+  font-size: 12px;
+}
+.ls-team-bar > span {
+  width: 60px;
+}
+.ls-team-bar > div {
+  flex: 1;
+  height: 10px;
+  background: #e7eade;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.ls-team-bar i {
+  display: block;
+  height: 100%;
+  animation: ls-bar 0.8s both;
+  transform-origin: left;
+}
+.ls-team-bar strong {
+  width: 36px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.ls-small {
+  font-size: 10px;
+  line-height: 1.7;
+  color: #869078;
+}
+.ls-backup {
+  border-left: 1px solid var(--line);
+  padding-left: 40px;
+}
+.ls-backup > p:not(.ls-eyebrow) {
+  color: #78846d;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.ls-backup label {
+  margin: 10px 0;
+  cursor: pointer;
+}
+.ls-backup input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.ls-backup label:focus-within {
+  outline: 2px solid #a76545;
+}
+.ls-toast {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 24px;
+  background: #293b2c;
+  color: #fff;
+  box-shadow: 0 8px 30px #19241c20;
+  border-radius: 5px;
+  z-index: 20;
+  font-size: 12px;
+  max-width: 90vw;
+}
+.ls-dialog {
+  font-family: Inter, Arial, sans-serif;
+  border: 0;
+  border-left: 1px solid #e0e5d7;
+  background: #fafbf6;
+  color: #2d3929;
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  width: 480px;
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 30px;
+  box-shadow: -20px 0 70px #18241d20;
+  animation: ls-panel 0.3s both;
+}
+.ls-dialog::backdrop {
+  background: #15211960;
+  backdrop-filter: blur(3px);
+}
+.ls-dialog-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 36px;
+}
+.ls-dialog-heading button {
+  border: 0;
+  background: none;
+  font-size: 24px;
+  color: #798471;
+}
+.ls-dialog h2 {
+  font-family: Georgia, serif;
+  font-size: 29px;
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 0 0 13px;
+}
+.ls-dialog-intro {
+  font-size: 11px;
+  color: #89947d;
+  margin-bottom: 30px;
+}
+.ls-dialog label {
+  display: block;
+  font-size: 10px;
+  color: #78866b;
+  margin: 17px 0;
+}
+.ls-dialog input,
+.ls-dialog select,
+.ls-dialog textarea {
+  display: block;
+  width: 100%;
+  margin-top: 7px;
+  padding: 12px;
+  border: 1px solid #dce1d3;
+  border-radius: 3px;
+  background: #fff;
+  color: #37462d;
+  font: inherit;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+.ls-dialog textarea {
+  min-height: 75px;
+  resize: vertical;
+}
+.ls-form-row {
+  display: flex;
+  gap: 15px;
+}
+.ls-form-row > label {
+  flex: 1;
+  min-width: 0;
+}
+.ls-dialog-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  border-top: 1px solid #e0e5d7;
+  margin-top: 25px;
+  padding-top: 22px;
+}
+.ls-error {
+  font-size: 12px;
+  padding: 12px;
+  background: #f6e8df;
+  color: #97442f;
+  border-radius: 3px;
+}
+.ls-history {
+  margin-top: 30px;
+}
+.ls-history > p:not(.ls-eyebrow) {
+  font-size: 11px;
+  border-bottom: 1px solid #e0e5d7;
+  padding: 10px 0;
+}
+.ls-history small {
+  display: block;
+  color: #8d9983;
+  margin-top: 4px;
+}
+.ls-dialog-wide {
+  inset: 5dvh 0 auto;
+  margin: auto;
+  width: 900px;
+  height: auto;
+  max-height: 92dvh;
+  padding: 25px;
+  max-width: 95vw;
+  border-radius: 5px;
+  animation: ls-enter 0.3s both;
+}
+.ls-dialog-wide > .ls-dialog-heading {
+  margin-bottom: 16px;
+}
+.ls-booking-split {
+  display: grid;
+  grid-template-columns: 0.85fr 1fr;
+  gap: 35px;
+}
+.ls-booking-story {
+  background: #29382c;
+  color: #f0eee4;
+  padding: 35px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 530px;
+  position: relative;
+  overflow: hidden;
+}
+.ls-booking-story h2 {
+  font-size: 42px;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  position: relative;
+  z-index: 1;
+}
+.ls-booking-story .ls-eyebrow {
+  color: #b3bba6;
+}
+.ls-booking-story > p:last-child {
+  font-size: 12px;
+  z-index: 1;
+}
+.ls-booking-story small {
+  font-size: 9px;
+  color: #b8c0ab;
+}
+.ls-motion-art {
+  height: 210px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin: 10px 0;
+}
+.ls-motion-art div {
+  position: absolute;
+  border: 1px solid #aabc8970;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  transform: rotate(-25deg) scaleX(0.6);
+  animation: ls-orbit 18s linear infinite;
+}
+.ls-motion-art div:nth-child(2) {
+  animation-delay: -6s;
+  border-color: #ceb28b90;
+}
+.ls-motion-art div:nth-child(3) {
+  animation-delay: -12s;
+  border-color: #bdbca870;
+}
+.ls-motion-art span {
+  font-family: Georgia, serif;
+  font-size: 60px;
+  color: #d4d1b4;
+  font-style: italic;
+}
+.ls-booking-form {
+  padding: 12px 12px 12px 0;
+}
+.ls-booking-form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 20px 0;
+}
+.ls-booking-form legend {
+  font-size: 10px;
+  color: #78866b;
+  margin-bottom: 10px;
+}
+.ls-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 130px;
+  overflow: auto;
+  padding: 3px;
+}
+.ls-slots button {
+  font-size: 10px;
+  border: 1px solid #dae0cd;
+  background: #fff;
+  color: #536248;
+  padding: 7px 11px;
+  border-radius: 3px;
+}
+.ls-slots button.selected {
+  background: #293b2c;
+  color: white;
+  border-color: #293b2c;
+}
+.ls-booking-form > .ls-primary,
+.ls-booking-form form > .ls-primary {
+  width: 100%;
+  margin-top: 10px;
+}
+.ls-success-mark {
+  display: block;
+  font-size: 40px;
+  margin: 50px 0 20px;
+  color: #8c9d6f;
+}
+@keyframes ls-enter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ls-event {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ls-panel {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes ls-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes ls-orbit {
+  from {
+    transform: rotate(0deg) scaleX(0.6);
+  }
+  to {
+    transform: rotate(360deg) scaleX(0.6);
+  }
+}
+@media (min-width: 1500px) {
+  .ls-heading h1 {
+    font-size: 39px;
+  }
+  .ls-page {
+    padding-top: 45px;
+  }
+  .ls-calendar {
+    grid-template-columns: 75px repeat(var(--staff-count), minmax(250px, 1fr));
+  }
+}
+@media (max-width: 1050px) {
+  .ls-studio {
+    grid-template-columns: 190px 1fr;
+  }
+  .ls-sidebar {
+    padding: 28px 17px;
+  }
+  .ls-page {
+    padding: 28px 24px 20px;
+  }
+  .ls-topbar {
+    padding: 0 24px;
+  }
+  .ls-heading h1 {
+    font-size: 27px;
+  }
+  .ls-heading {
+    align-items: flex-start;
+  }
+  .ls-heading > .ls-primary {
+    max-width: 160px;
+  }
+  .ls-metrics > div {
+    padding: 0 15px;
+  }
+  .ls-metrics strong {
+    font-size: 24px;
+  }
+  .ls-metrics span {
+    font-size: 9px;
+  }
+}
+@media (max-width: 720px) {
+  .ls-studio {
+    display: block;
+  }
+  .ls-sidebar {
+    height: auto;
+    position: relative;
+    padding: 14px 18px;
+    display: block;
+  }
+  .ls-brand {
+    font-size: 12px;
+    gap: 10px;
+  }
+  .ls-brand img {
+    width: 34px;
+    height: 34px;
+  }
+  .ls-brand br {
+    display: none;
+  }
+  .ls-brand b {
+    font-size: 10px;
+    margin-left: 5px;
+    letter-spacing: 2px;
+  }
+  .ls-workspace,
+  .ls-account {
+    display: none;
+  }
+  .ls-side-bottom {
+    position: absolute;
+    right: 15px;
+    top: 14px;
+  }
+  .ls-booking-link {
+    font-size: 9px !important;
+    padding: 8px;
+    max-width: 160px;
+  }
+  .ls-sidebar nav {
+    display: flex;
+    margin-top: 15px;
+    gap: 4px;
+  }
+  .ls-sidebar nav button {
+    font-size: 10px;
+    padding: 9px;
+    gap: 6px;
+    flex: 1;
+  }
+  .ls-sidebar nav button svg {
+    width: 15px;
+  }
+  .ls-sidebar nav button i {
+    display: none;
+  }
+  .ls-topbar {
+    height: 44px;
+    padding: 0 18px;
+    font-size: 10px;
+  }
+  .ls-demo {
+    font-size: 8px;
+    letter-spacing: 0;
+  }
+  .ls-page {
+    padding: 25px 18px 20px;
+  }
+  .ls-heading {
+    display: block;
+    margin-bottom: 22px;
+  }
+  .ls-heading h1 {
+    font-size: 29px;
+    max-width: 310px;
+  }
+  .ls-heading p:not(.ls-eyebrow) {
+    font-size: 11px;
+  }
+  .ls-heading > .ls-primary {
+    margin-top: 18px;
+    max-width: none;
+    width: 100%;
+  }
+  .ls-metrics {
+    grid-template-columns: 1fr 1fr;
+    padding: 16px 0;
+    gap: 20px 0;
+  }
+  .ls-metrics > div:nth-child(3) {
+    padding-left: 0;
+  }
+  .ls-metrics > div:nth-child(2) {
+    border: 0;
+  }
+  .ls-metrics strong {
+    font-size: 28px;
+  }
+  .ls-agenda-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 13px;
+  }
+  .ls-day-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .ls-filters {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .ls-calendar {
+    min-width: 730px;
+  }
+  .ls-calendar-wrap {
+    margin: 0 -18px;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  .ls-agenda-footer {
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 8px;
+  }
+  .ls-agenda-footer span:last-child {
+    text-align: right;
+    max-width: 170px;
+  }
+  .ls-page-footer {
+    display: block;
+    font-size: 8px;
+  }
+  .ls-page-footer > span {
+    display: block;
+    margin-top: 8px;
+  }
+  .ls-client-list > button {
+    gap: 12px;
+    padding: 18px 0;
+  }
+  .ls-client-list > button > span:not(.ls-avatar) {
+    display: none;
+  }
+  .ls-client-list small {
+    max-width: 260px;
+    font-size: 9px;
+  }
+  .ls-list-tools {
+    align-items: center;
+  }
+  .ls-search input {
+    min-width: 0;
+    width: 150px;
+    font-size: 11px;
+  }
+  .ls-list-tools > .ls-secondary {
+    padding: 10px;
+    font-size: 9px !important;
+  }
+  .ls-service-list > button {
+    gap: 12px;
+    padding: 24px 0;
+  }
+  .ls-service-list h2 {
+    font-size: 22px;
+  }
+  .ls-service-list p {
+    font-size: 9px;
+    max-width: 180px;
+  }
+  .ls-service-list strong {
+    font-size: 21px;
+  }
+  .ls-service-list button > span:last-child {
+    display: none;
+  }
+  .ls-insights {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .ls-backup {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 25px 0 0;
+  }
+  .ls-dialog {
+    padding: 24px;
+    width: 100%;
+  }
+  .ls-dialog-wide {
+    padding: 20px;
+    height: auto;
+    max-height: 95dvh;
+  }
+  .ls-booking-split {
+    display: block;
+  }
+  .ls-booking-story {
+    min-height: 0;
+    padding: 23px;
+    margin-bottom: 20px;
+  }
+  .ls-booking-story h2 {
+    font-size: 30px;
+  }
+  .ls-booking-story h2 br {
+    display: initial;
+  }
+  .ls-booking-story > p:last-child {
+    display: none;
+  }
+  .ls-motion-art {
+    position: absolute;
+    right: -25px;
+    bottom: -50px;
+    opacity: 0.25;
+    width: 200px;
+  }
+  .ls-booking-form {
+    padding: 0;
+  }
+  .ls-dialog-heading {
+    margin-bottom: 25px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ls-studio *,
+  .ls-dialog,
+  .ls-dialog * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
