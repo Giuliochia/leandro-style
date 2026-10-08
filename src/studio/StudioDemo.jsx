@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   STAFF,
   dayKey,
@@ -11,8 +11,15 @@ import {
   isState,
   download,
   calendarEvent,
+  upgradeState,
+  waitMatches,
 } from "./model.mjs";
 import "./studio.css";
+import "./studio-v2.css";
+import Dialog from "./Dialog.jsx";
+import Agenda from "./Agenda.jsx";
+import Waitlist from "./Waitlist.jsx";
+import ClientProfile from "./ClientProfile.jsx";
 const money = (n) =>
   new Intl.NumberFormat("it-IT", {
     style: "currency",
@@ -27,6 +34,7 @@ const labels = {
 const views = [
   ["agenda", "Agenda", "calendar"],
   ["clients", "Clienti", "people"],
+  ["waitlist", "Attesa", "calendar"],
   ["services", "Servizi", "scissors"],
   ["insights", "Andamento", "chart"],
 ];
@@ -84,11 +92,11 @@ function Icon({ name }) {
 function initialState() {
   try {
     const saved = JSON.parse(localStorage.getItem("leandro-studio-v1"));
-    if (isState(saved)) return saved;
+    if (isState(saved)) return upgradeState(saved);
   } catch {
     /* Demo starts fresh if storage is unavailable */
   }
-  return seed();
+  return upgradeState(seed());
 }
 export default function StudioDemo() {
   const [state, setState] = useState(initialState),
@@ -99,7 +107,8 @@ export default function StudioDemo() {
     [panel, setPanel] = useState(null),
     [toast, setToast] = useState(""),
     [storageError, setStorageError] = useState(false),
-    [booking, setBooking] = useState(false);
+    [booking, setBooking] = useState(false),
+    [undo, setUndo] = useState(null);
   useEffect(() => {
     try {
       localStorage.setItem("leandro-studio-v1", JSON.stringify(state));
@@ -121,10 +130,15 @@ export default function StudioDemo() {
     0,
   );
   const minutes = active.reduce((n, a) => n + duration(a, state.services), 0);
-  const displayStaff = STAFF.filter((s) => staff === "all" || s.id === staff);
+
   const update = (item) => {
     const error = validateBooking(item, state);
     if (error) return error;
+    setUndo({
+      appointments: state.appointments,
+      waitlist: state.waitlist,
+      date,
+    });
     setState((prev) => ({
       ...prev,
       appointments: prev.appointments.some((a) => a.id === item.id)
@@ -132,6 +146,7 @@ export default function StudioDemo() {
         : [...prev.appointments, { ...item, id: crypto.randomUUID() }],
     }));
     setPanel(null);
+    setDate(item.date);
     setToast("Appuntamento salvato nella demo");
     return "";
   };
@@ -154,10 +169,11 @@ export default function StudioDemo() {
     try {
       const file = event.target.files[0];
       if (!file) return;
-      if (file.size > 1000000) throw Error();
+      if (file.size > 20000000) throw Error();
       const next = JSON.parse(await file.text());
       if (!isState(next)) throw Error();
-      setState(next);
+      setState(upgradeState(next));
+      setUndo(null);
       setToast("Backup demo importato");
     } catch {
       setToast("Backup non valido: nessun dato modificato");
@@ -168,7 +184,10 @@ export default function StudioDemo() {
     <div className="ls-studio">
       <aside className="ls-sidebar">
         <div className="ls-brand">
-          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Logo Leandro Style" />
+          <img
+            src={`${import.meta.env.BASE_URL}logo.png`}
+            alt="Logo Leandro Style"
+          />
           <span>
             LEANDRO
             <br />
@@ -223,20 +242,24 @@ export default function StudioDemo() {
               <h1>
                 {view === "agenda"
                   ? "Ogni appuntamento, al suo posto."
-                  : view === "clients"
-                    ? "Le persone, prima di tutto."
-                    : view === "services"
-                      ? "Il valore del tuo lavoro."
-                      : "Una giornata in numeri."}
+                  : view === "waitlist"
+                    ? "Ogni spazio, una possibilità."
+                    : view === "clients"
+                      ? "Le persone, prima di tutto."
+                      : view === "services"
+                        ? "Il valore del tuo lavoro."
+                        : "Una giornata in numeri."}
               </h1>
               <p>
                 {view === "agenda"
                   ? "Tempo ben organizzato. Più spazio per il tuo mestiere."
-                  : view === "clients"
-                    ? "Preferenze e storico, sempre a portata di mano."
-                    : view === "services"
-                      ? "Durate e prezzi guidano agenda e prenotazioni."
-                      : "Dati calcolati dagli appuntamenti della demo."}
+                  : view === "waitlist"
+                    ? "Trova le richieste compatibili con gli spazi liberi."
+                    : view === "clients"
+                      ? "Preferenze e storico, sempre a portata di mano."
+                      : view === "services"
+                        ? "Durate e prezzi guidano agenda e prenotazioni."
+                        : "Dati calcolati dagli appuntamenti della demo."}
               </p>
             </div>
             <button
@@ -246,6 +269,12 @@ export default function StudioDemo() {
               <Icon name="plus" /> Nuovo appuntamento
             </button>
           </div>
+          {storageError && (
+            <p className="ls-error" role="alert">
+              Il salvataggio nel browser non è riuscito. Esporta un backup dalla
+              sezione Andamento prima di chiudere questa pagina.
+            </p>
+          )}
           <div className="ls-metrics">
             <div>
               <span>Appuntamenti del giorno</span>
@@ -283,137 +312,83 @@ export default function StudioDemo() {
             </div>
           </div>
           {view === "agenda" && (
-            <>
-              <div className="ls-agenda-toolbar">
-                <div className="ls-day-controls">
-                  <button
-                    aria-label="Giorno precedente"
-                    onClick={() => shiftDay(-1)}
-                  >
-                    ‹
-                  </button>
-                  <input
-                    aria-label="Data agenda"
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value || dayKey())}
-                  />
-                  <button
-                    aria-label="Giorno successivo"
-                    onClick={() => shiftDay(1)}
-                  >
-                    ›
-                  </button>
-                  <button onClick={() => setDate(dayKey())}>Oggi</button>
-                </div>
-                <div className="ls-filters">
-                  <select
-                    aria-label="Filtra professionista"
-                    value={staff}
-                    onChange={(e) => setStaff(e.target.value)}
-                  >
-                    <option value="all">Tutto il team</option>
-                    {STAFF.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                  <span className="ls-live-dot" /> Vista giorno
-                </div>
-              </div>
-              <div className="ls-calendar-wrap">
-                <div
-                  className="ls-calendar"
-                  style={{ "--staff-count": displayStaff.length }}
-                >
-                  <div className="ls-hours-head">ORA</div>
-                  {displayStaff.map((s) => (
-                    <div className="ls-staff-head" key={s.id}>
-                      <span
-                        className="ls-avatar"
-                        style={{ background: s.color + "18", color: s.color }}
-                      >
-                        {s.name[0]}
-                      </span>
-                      <div>
-                        {s.name}
-                        <small>{s.role}</small>
-                      </div>
-                      <span className="ls-staff-count">
-                        {active.filter((a) => a.staff === s.id).length}
-                      </span>
-                    </div>
-                  ))}
-                  <div className="ls-hours">
-                    {Array.from({ length: 10 }, (_, i) => (
-                      <span key={i} style={{ top: i * 72 }}>
-                        {clock(540 + i * 60)}
-                      </span>
-                    ))}
-                  </div>
-                  {displayStaff.map((s) => (
-                    <div key={s.id} className="ls-track">
-                      <div className="ls-lunch">
-                        <span>Pausa / 13:00–14:00</span>
-                      </div>
-                      {active
-                        .filter((a) => a.staff === s.id)
-                        .map((a) => {
-                          const service = state.services.find(
-                              (v) => v.id === a.service,
-                            ),
-                            client = state.clients.find(
-                              (c) => c.id === a.client,
-                            );
-                          return (
-                            <button
-                              key={a.id}
-                              className={`ls-appointment ${a.status === "completato" ? "is-complete" : ""}`}
-                              style={{
-                                top: (a.start - 540) * 1.2,
-                                height: service.minutes * 1.2 - 4,
-                                "--event-color": s.color,
-                              }}
-                              onClick={() =>
-                                setPanel({ type: "appointment", item: a })
-                              }
-                            >
-                              <span className="ls-event-time">
-                                {clock(a.start)} —{" "}
-                                {clock(a.start + service.minutes)}{" "}
-                                {a.status === "completato" && <b>✓</b>}
-                              </span>
-                              <strong>{client.name}</strong>
-                              <span>{service.name}</span>
-                              {service.minutes >= 60 && (
-                                <small>
-                                  {labels[a.status]}{" "}
-                                  <span>{money(service.price)}</span>
-                                </small>
-                              )}
-                            </button>
-                          );
-                        })}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="ls-agenda-footer">
-                <span>
-                  {new Date(date + "T12:00:00").toLocaleDateString("it-IT", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </span>
-                <span>
-                  <i /> Prenotato <i className="muted" /> Completato · Clicca
-                  per gestire
-                </span>
-              </div>
-            </>
+            <Agenda
+              state={state}
+              date={date}
+              staff={staff}
+              setStaff={setStaff}
+              setDate={setDate}
+              shiftDay={shiftDay}
+              onOpen={(item) => setPanel({ type: "appointment", item })}
+              onNew={(staff, start, maxDuration) =>
+                setPanel({
+                  type: "appointment",
+                  item: {
+                    ...newItem(),
+                    staff,
+                    start,
+                    service:
+                      state.services.find(
+                        (s) => !maxDuration || s.minutes <= maxDuration,
+                      )?.id || state.services[0].id,
+                  },
+                })
+              }
+              onMove={(item) => {
+                const error = update(item);
+                if (error) setToast(error);
+              }}
+              onWaitlist={() => setView("waitlist")}
+            />
+          )}
+          {view === "waitlist" && (
+            <Waitlist
+              state={state}
+              date={date}
+              setDate={setDate}
+              onAdd={(item) => {
+                setUndo(null);
+                setState((prev) => ({
+                  ...prev,
+                  waitlist: [
+                    ...prev.waitlist,
+                    { ...item, id: crypto.randomUUID() },
+                  ],
+                }));
+              }}
+              onRemove={(id) => {
+                setUndo(null);
+                setState((prev) => ({
+                  ...prev,
+                  waitlist: prev.waitlist.filter((w) => w.id !== id),
+                }));
+              }}
+              onPlace={(request, item) => {
+                if (
+                  !waitMatches(state, request, item.date).some(
+                    (m) => m.staff === item.staff && m.start === item.start,
+                  )
+                ) {
+                  setToast("Lo spazio non è più disponibile.");
+                  return false;
+                }
+                setUndo({
+                  appointments: state.appointments,
+                  waitlist: state.waitlist,
+                  date,
+                });
+                setState((prev) => ({
+                  ...prev,
+                  appointments: [
+                    ...prev.appointments,
+                    { ...item, id: crypto.randomUUID() },
+                  ],
+                  waitlist: prev.waitlist.filter((w) => w.id !== request.id),
+                }));
+                setToast("Appuntamento inserito dalla lista d’attesa");
+                return true;
+              }}
+            />
           )}
           {view === "clients" && (
             <>
@@ -564,12 +539,56 @@ export default function StudioDemo() {
           </footer>
         </section>
       </main>
-      {panel && (
+      {panel?.type === "client" && (
+        <ClientProfile
+          key={panel.item.id || "new"}
+          item={panel.item}
+          state={state}
+          onClose={() => setPanel(panel.back || null)}
+          onSave={(item) => {
+            setState((prev) => ({
+              ...prev,
+              clients: item.id
+                ? prev.clients.map((c) => (c.id === item.id ? item : c))
+                : [...prev.clients, { ...item, id: crypto.randomUUID() }],
+            }));
+            setPanel(panel.back || null);
+            setToast("Scheda cliente salvata");
+          }}
+          onNext={(client) => {
+            setPanel({ type: "appointment", item: { ...newItem(), client } });
+            setView("agenda");
+          }}
+        />
+      )}
+      {panel && panel.type !== "client" && (
         <Editor
           key={panel.type + (panel.item.id || "new")}
           panel={panel}
           state={state}
           onClose={() => setPanel(null)}
+          onClient={(item) =>
+            setPanel({
+              type: "client",
+              item: state.clients.find((c) => c.id === item.client),
+              back: { type: "appointment", item },
+            })
+          }
+          onNext={(item) => {
+            const next = new Date(item.date + "T12:00:00");
+            next.setDate(next.getDate() + 28);
+            setPanel({
+              type: "appointment",
+              item: {
+                ...item,
+                id: "",
+                date: dayKey(next),
+                status: "prenotato",
+                confirmation: "pending",
+                note: "",
+              },
+            });
+          }}
           onSave={(item) => {
             if (panel.type === "appointment") return update(item);
             if (panel.type === "client") {
@@ -593,6 +612,7 @@ export default function StudioDemo() {
                 )
               )
                 return "Questa durata genera conflitti o supera gli orari. Sposta prima gli appuntamenti.";
+              setUndo(null);
               setState(candidate);
             }
             setPanel(null);
@@ -622,11 +642,37 @@ export default function StudioDemo() {
               ...candidate,
               appointments: [...candidate.appointments, appointment],
             });
+            setUndo(null);
             setDate(item.date);
             setToast("Prenotazione demo aggiunta in agenda");
             return "";
           }}
         />
+      )}
+      {undo && (
+        <div className="ls-undo" role="status">
+          <span>Ultima modifica all’agenda</span>
+          <button
+            onClick={() => {
+              setState((prev) => ({
+                ...prev,
+                appointments: undo.appointments,
+                waitlist: undo.waitlist,
+              }));
+              setDate(undo.date);
+              setUndo(null);
+              setToast("Modifica annullata");
+            }}
+          >
+            Annulla modifica
+          </button>
+          <button
+            aria-label="Chiudi annullamento"
+            onClick={() => setUndo(null)}
+          >
+            ×
+          </button>
+        </div>
       )}
       {toast && (
         <div className="ls-toast" role="status">
@@ -636,41 +682,7 @@ export default function StudioDemo() {
     </div>
   );
 }
-function Dialog({ children, onClose, title, wide = false }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const previous = document.activeElement;
-    const dialog = ref.current;
-    dialog.showModal();
-    return () => {
-      dialog.close();
-      previous?.focus();
-    };
-  }, []);
-  return (
-    <dialog
-      className={`ls-dialog ${wide ? "ls-dialog-wide" : ""}`}
-      ref={ref}
-      aria-label={title}
-      onCancel={(e) => {
-        e.preventDefault();
-        onClose();
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="ls-dialog-heading">
-        <span className="ls-eyebrow">LEANDRO STYLE / {title}</span>
-        <button aria-label="Chiudi pannello" onClick={onClose}>
-          ×
-        </button>
-      </div>
-      {children}
-    </dialog>
-  );
-}
-function Editor({ panel, state, onClose, onSave }) {
+function Editor({ panel, state, onClose, onSave, onClient, onNext }) {
   const [item, setItem] = useState({ ...panel.item }),
     [error, setError] = useState("");
   const isApp = panel.type === "appointment",
@@ -723,6 +735,13 @@ function Editor({ panel, state, onClose, onSave }) {
                 ))}
               </select>
             </label>
+            <button
+              type="button"
+              className="ls-profile-link"
+              onClick={() => onClient(item)}
+            >
+              Apri scheda cliente <Icon name="arrow" />
+            </button>
             <label>
               Servizio
               <select
@@ -739,6 +758,7 @@ function Editor({ panel, state, onClose, onSave }) {
             <label>
               Professionista
               <select
+                aria-label="Professionista"
                 value={item.staff}
                 onChange={(e) => change("staff", e.target.value)}
               >
@@ -784,8 +804,28 @@ function Editor({ panel, state, onClose, onSave }) {
               </select>
             </label>
             <label>
+              Conferma cliente (registrata dal salone)
+              <select
+                value={item.confirmation || "pending"}
+                onChange={(e) => change("confirmation", e.target.value)}
+              >
+                <option value="pending">Da confermare</option>
+                <option value="confirmed">Confermato</option>
+              </select>
+            </label>
+            {item.id && (
+              <button
+                type="button"
+                className="ls-secondary"
+                onClick={() => onNext(item)}
+              >
+                Prenota il prossimo · tra 4 settimane
+              </button>
+            )}
+            <label>
               Nota interna
               <textarea
+                aria-label="Nota interna"
                 value={item.note || ""}
                 maxLength={1000}
                 onChange={(e) => change("note", e.target.value)}

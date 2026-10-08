@@ -35,3 +35,13 @@ Verificare autenticazione e permessi Appwrite con account admin/cliente, control
 ## Verifica
 
 `node --test src/studio/model.test.mjs` controlla conflitti, adiacenza, pausa, chiusura, cancellazione, disponibilità, backup e ICS. `VITE_STUDIO_DEMO_ONLY=true npm run build` crea l'anteprima senza service worker. `npm run build` conserva la PWA del gestionale. La demo è un percorso di frontend locale, non una prova end-to-end del backend.
+
+## Versione 2 — uso quotidiano
+
+Agenda su telefono con un solo professionista, selettore rapido e lista giornaliera. Spazi liberi cliccabili, evidenza del prossimo appuntamento, trascinamento su desktop con controllo dei conflitti e annullamento dell’ultima modifica. La conferma cliente è registrata manualmente dal salone; nessun messaggio viene spedito. Il comando per il prossimo appuntamento apre una proposta a quattro settimane, da controllare e salvare.
+
+Lista d’attesa locale: richieste per cliente/servizio, intervallo di date, professionista o chiunque, fascia oraria. Le disponibilità devono contenere l’intera durata; pausa e appuntamenti già presenti vengono esclusi. L’operatore sceglie uno slot e inserisce l’appuntamento, rimuovendo la richiesta. L’annullamento ripristina appuntamento e richiesta insieme.
+
+Schede cliente con telefono facoltativo, preferenze, formula colore, storico e fino a tre foto ottimizzate. Il caricamento richiede la conferma dell’autorizzazione del cliente. Modifiche salvate localmente e incluse nel backup; scheda raggiungibile dal dettaglio senza perdere la bozza dell’appuntamento. I backup precedenti restano compatibili.
+
+Queste nuove funzioni sono nella demo Studio e non scrivono nel database Appwrite. Collegamento persistente multisessione, promemoria e comunicazioni richiedono un successivo intervento sul backend.

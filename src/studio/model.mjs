@@ -64,6 +64,28 @@ export function seed(date = dayKey()) {
     version: 1,
     services: SERVICES,
     clients: CLIENTS,
+    waitlist: [
+      {
+        id: "w1",
+        client: "c2",
+        service: "men",
+        staff: "any",
+        from: date,
+        to: date,
+        start: 600,
+        end: 780,
+      },
+      {
+        id: "w2",
+        client: "c4",
+        service: "balayage",
+        staff: "giulia",
+        from: date,
+        to: date,
+        start: 840,
+        end: 1140,
+      },
+    ],
     appointments: [
       ["c1", "leandro", "cut", 540],
       ["c2", "marco", "men", 540],
@@ -97,7 +119,7 @@ export function validateBooking(item, state) {
     !state.services.some((s) => s.id === item.service)
   )
     return "Seleziona cliente, servizio e professionista.";
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(item.date) || !Number.isInteger(item.start))
+  if (!validDay(item.date) || !Number.isInteger(item.start))
     return "Data o orario non valido.";
   const end = item.start + duration(item, state.services);
   if (item.start < 540 || end > 1140 || (item.start < 840 && end > 780))
@@ -167,7 +189,28 @@ export function isState(value) {
     unique(value.clients) &&
     unique(value.services) &&
     unique(value.appointments) &&
-    value.appointments.every((a) => !validateBooking(a, value))
+    value.appointments.every((a) => !validateBooking(a, value)) &&
+    value.clients.every(
+      (c) =>
+        (c.phone === undefined || typeof c.phone === "string") &&
+        (c.formula === undefined || typeof c.formula === "string") &&
+        (c.photos === undefined ||
+          (Array.isArray(c.photos) &&
+            c.photos.length <= 3 &&
+            c.photos.every(
+              (p) =>
+                typeof p.id === "string" &&
+                typeof p.src === "string" &&
+                /^data:image\/(jpeg|png|webp);base64,/.test(p.src) &&
+                p.src.length < 700000,
+            ))),
+    ) &&
+    (value.waitlist === undefined ||
+      (Array.isArray(value.waitlist) &&
+        unique(value.waitlist) &&
+        value.waitlist.every(
+          (w) => typeof w.id === "string" && !validateWaitRequest(w, value),
+        )))
   );
 }
 export function download(filename, body, type = "application/json") {
@@ -189,4 +232,91 @@ export function calendarEvent(item, state) {
     item.date.replaceAll("-", "") + "T" + clock(m).replace(":", "") + "00";
   const service = state.services.find((s) => s.id === item.service);
   return `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Leandro Style//Studio Demo//IT\r\nBEGIN:VEVENT\r\nUID:${item.id}@leandro-style-demo\r\nDTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z\r\nDTSTART:${localTime(item.start)}\r\nDTEND:${localTime(item.start + service.minutes)}\r\nSUMMARY:${escape(service.name + " — " + state.clients.find((c) => c.id === item.client).name)}\r\nDESCRIPTION:${escape("Demo Leandro Style. Orario locale del salone.")}\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`;
+}
+
+// Optional fields preserve existing v1 backups and browser data.
+export function upgradeState(state) {
+  return {
+    ...state,
+    waitlist: state.waitlist || [],
+    clients: state.clients.map((c) => ({
+      ...c,
+      formula: c.formula || "",
+      phone: c.phone || "",
+      photos: c.photos || [],
+    })),
+  };
+}
+export function freeWindows(state, staff, date) {
+  const busy = state.appointments
+    .filter(
+      (a) => a.staff === staff && a.date === date && a.status !== "annullato",
+    )
+    .sort((a, b) => a.start - b.start);
+  return [
+    [540, 780],
+    [840, 1140],
+  ].flatMap(([start, end]) => {
+    const gaps = [];
+    let cursor = start;
+    for (const a of busy) {
+      if (a.start >= end || a.start + duration(a, state.services) <= start)
+        continue;
+      if (a.start > cursor) gaps.push({ start: cursor, end: a.start });
+      cursor = Math.max(cursor, a.start + duration(a, state.services));
+    }
+    if (cursor < end) gaps.push({ start: cursor, end });
+    return gaps;
+  });
+}
+export function validateWaitRequest(item, state) {
+  if (
+    !state.clients.some((c) => c.id === item.client) ||
+    !state.services.some((s) => s.id === item.service) ||
+    !(item.staff === "any" || STAFF.some((s) => s.id === item.staff))
+  )
+    return "Scegli cliente, servizio e professionista.";
+  if (!validDay(item.from) || !validDay(item.to) || item.from > item.to)
+    return "Controlla l’intervallo di date.";
+  if (
+    !Number.isInteger(item.start) ||
+    !Number.isInteger(item.end) ||
+    item.start < 540 ||
+    item.end > 1140 ||
+    item.start >= item.end
+  )
+    return "Controlla la fascia oraria (09:00–19:00).";
+  return "";
+}
+export function waitMatches(state, request, date) {
+  if (
+    validateWaitRequest(request, state) ||
+    date < request.from ||
+    date > request.to
+  )
+    return [];
+  return STAFF.filter(
+    (s) => request.staff === "any" || s.id === request.staff,
+  ).flatMap((s) =>
+    availableSlots(state, request.service, s.id, date)
+      .filter(
+        (start) =>
+          start >= request.start &&
+          start + duration(request, state.services) <= request.end,
+      )
+      .map((start) => ({
+        staff: s.id,
+        start,
+        date,
+        service: request.service,
+        client: request.client,
+        status: "prenotato",
+        note: "Da lista d’attesa",
+      })),
+  );
+}
+export function validDay(day) {
+  if (typeof day !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return false;
+  const d = new Date(day + "T12:00:00");
+  return !Number.isNaN(d.getTime()) && dayKey(d) === day;
 }
